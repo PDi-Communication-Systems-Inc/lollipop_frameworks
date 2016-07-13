@@ -34,6 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.StringBuffer;
+
 /**
  * Native calls for bring up/shut down of the supplicant daemon and for
  * sending requests to the supplicant daemon
