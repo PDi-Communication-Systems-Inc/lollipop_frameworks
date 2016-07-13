@@ -130,7 +130,7 @@ public class WifiConfigStore extends IpConfigStore {
 
     private Context mContext;
     private static final String TAG = "WifiConfigStore";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static boolean VDBG = false;
     private static boolean VVDBG = false;
 

@@ -57,7 +57,7 @@ import java.util.Map;
 public class WifiScanningServiceImpl extends IWifiScanner.Stub {
 
     private static final String TAG = "WifiScanningService";
-    private static final boolean DBG = true;
+    private static final boolean DBG = false;
     private static final int INVALID_KEY = 0;                               // same as WifiScanner
     private static final int MIN_PERIOD_PER_CHANNEL_MS = 200;               // DFS needs 120 ms
 

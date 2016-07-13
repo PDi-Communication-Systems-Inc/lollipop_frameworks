@@ -330,13 +330,44 @@ public class WifiNative {
 
     public String getMacAddress() {
         //Macaddr = XX.XX.XX.XX.XX.XX
+        if (DBG) Log.d(mTAG, "getMacAddress():  string command: DRIVER MACADDR");
         String ret = doStringCommand("DRIVER MACADDR");
+        if (DBG) Log.d(mTAG, "getMacAddress(): ret from DRIvER MACADDR " + ret);
+
         if (!TextUtils.isEmpty(ret)) {
             String[] tokens = ret.split(" = ");
             if (tokens.length == 2) return tokens[1];
-        }
+        }   
+        else {
+           try {
+              String fileName = "/sys/class/net/wlan0/address";
+              File f = new File(fileName);
+              FileInputStream in = new FileInputStream(f);
+              byte[] buffer = new byte[48];
+              int byteCount = in.read(buffer);
+              String result = null;
+              if (byteCount > 0) {
+                 result = new String(buffer, 0, byteCount, "utf-8");
+              }   
+              if (result != null) {    
+                 if (DBG) Log.d(mTAG, "Before conversion, MAC address is: " 
+                                + result);
+                 result = result.trim();
+                 if (DBG) Log.d(mTAG, "Using secondary method to return" + 
+                                " MAC Address" + result);
+                 return result;
+              }   
+              else {
+                Log.e(mTAG, "Wi-fi MAC address not available");
+                return null;
+              }   
+           }   
+           catch(IOException ioe) {
+              Log.e(mTAG, ioe.toString());
+           }   
+        }   
         return null;
-    }
+    }   
 
     /**
      * Format of results:
