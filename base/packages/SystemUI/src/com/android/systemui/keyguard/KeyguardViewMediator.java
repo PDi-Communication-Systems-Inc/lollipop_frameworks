@@ -112,7 +112,7 @@ import static android.provider.Settings.System.SCREEN_OFF_TIMEOUT;
  * thread of the keyguard.
  */
 public class KeyguardViewMediator extends SystemUI {
-    private static final int KEYGUARD_DISPLAY_TIMEOUT_DELAY_DEFAULT = 30000;
+    private static final int KEYGUARD_DISPLAY_TIMEOUT_DELAY_DEFAULT = 2*1000*60;
     final static boolean DEBUG = false;
     private final static boolean DBG_WAKE = false;
 
@@ -140,7 +140,8 @@ public class KeyguardViewMediator extends SystemUI {
     /**
      * The default amount of time we stay awake (used for all key input)
      */
-    public static final int AWAKE_INTERVAL_DEFAULT_MS = 10000;
+    public static final int AWAKE_INTERVAL_DEFAULT_MS = 
+       KEYGUARD_DISPLAY_TIMEOUT_DELAY_DEFAULT;
 
     /**
      * How long to wait after the screen turns off due to timeout before
@@ -176,7 +177,6 @@ public class KeyguardViewMediator extends SystemUI {
     // Whether the next call to playSounds() should be skipped.  Defaults to
     // true because the first lock (on boot) should be silent.
     private boolean mSuppressNextLockSound = true;
-
 
     /** High level access to the power manager for WakeLocks */
     private PowerManager mPM;
