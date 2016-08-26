@@ -572,7 +572,17 @@ public class SettingsProvider extends ContentProvider {
                 }
 
                 final SecureRandom random = new SecureRandom();
-                final String newAndroidIdValue = Long.toHexString(random.nextLong());
+                final String serialNo = SystemProperties.get("ro.serialno");
+                String newAndroidIdValue;
+                if ((serialNo != null) && (serialNo.length() > 0)) {
+                   newAndroidIdValue = serialNo;
+                }
+                else {
+                   Slog.w(TAG, "ensureAndroidIdIsSet(): Unable to use MAC " + 
+                               "ethernet address for ANDROID_ID, using " + 
+                               "randomized value");
+                   newAndroidIdValue = Long.toHexString(random.nextLong());
+                }
                 final ContentValues values = new ContentValues();
                 values.put(Settings.NameValueTable.NAME, Settings.Secure.ANDROID_ID);
                 values.put(Settings.NameValueTable.VALUE, newAndroidIdValue);
