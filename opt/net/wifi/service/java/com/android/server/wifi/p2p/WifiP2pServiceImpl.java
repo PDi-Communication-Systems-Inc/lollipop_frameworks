@@ -2657,7 +2657,11 @@ public final class WifiP2pServiceImpl extends IWifiP2pManager.Stub {
              * default that has low likelihood of collision with a peer */
             String id = Settings.Secure.getString(mContext.getContentResolver(),
                     Settings.Secure.ANDROID_ID);
-            return "Android_" + id.substring(0,4);
+            /* If we start to use the ethernet Mac then the substring call
+               used by default will lead to many devices being shown as
+               Android_0002. Just pass back the whole MAC address with 
+               TAB_ prefix */
+            return "TAB_" + id;
         }
         return deviceName;
     }
