@@ -48,12 +48,14 @@ public class SignalClusterView
     private int mMobileStrengthId = 0, mMobileTypeId = 0;
     private boolean mIsAirplaneMode = false;
     private int mAirplaneIconId = 0;
-    private String mWifiDescription, mMobileDescription, mMobileTypeDescription;
+    private boolean mEthernetVisible = false;
+    private int mEthernetIconId = 0;
+    private String mWifiDescription, mMobileDescription, mMobileTypeDescription, mEthernetDescription;
     private boolean mRoaming;
     private boolean mIsMobileTypeIconWide;
 
     ViewGroup mWifiGroup, mMobileGroup;
-    ImageView mVpn, mWifi, mMobile, mMobileType, mAirplane;
+    ImageView mVpn, mWifi, mMobile, mMobileType, mAirplane, mEthernet;
     View mWifiAirplaneSpacer;
     View mWifiSignalSpacer;
 
@@ -101,6 +103,7 @@ public class SignalClusterView
         mMobile         = (ImageView) findViewById(R.id.mobile_signal);
         mMobileType     = (ImageView) findViewById(R.id.mobile_type);
         mAirplane       = (ImageView) findViewById(R.id.airplane);
+        mEthernet       = (ImageView) findViewById(R.id.ethernet);
         mWifiAirplaneSpacer =         findViewById(R.id.wifi_airplane_spacer);
         mWifiSignalSpacer =           findViewById(R.id.wifi_signal_spacer);
 
@@ -116,6 +119,7 @@ public class SignalClusterView
         mMobile         = null;
         mMobileType     = null;
         mAirplane       = null;
+        mEthernet       = null;
 
         super.onDetachedFromWindow();
     }
@@ -160,6 +164,15 @@ public class SignalClusterView
     public void setIsAirplaneMode(boolean is, int airplaneIconId) {
         mIsAirplaneMode = is;
         mAirplaneIconId = airplaneIconId;
+
+        apply();
+    }
+
+    @Override
+    public void setEthernetIndicators(boolean visible, int etherIcon, String contentDescription) {
+        mEthernetVisible = visible;
+        mEthernetIconId = etherIcon;
+        mEthernetDescription = contentDescription;
 
         apply();
     }
@@ -242,6 +255,14 @@ public class SignalClusterView
             mWifiAirplaneSpacer.setVisibility(View.VISIBLE);
         } else {
             mWifiAirplaneSpacer.setVisibility(View.GONE);
+        }
+
+        if (mEthernetVisible) {
+            mEthernet.setVisibility(View.VISIBLE);
+            mEthernet.setImageResource(mEthernetIconId);
+            mEthernet.setContentDescription(mEthernetDescription);
+        } else {
+            mEthernet.setVisibility(View.GONE);
         }
 
         if (mRoaming && mMobileVisible && mWifiVisible) {

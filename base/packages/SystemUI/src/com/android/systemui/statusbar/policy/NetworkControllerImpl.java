@@ -97,6 +97,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
     String mContentDescriptionWimax;
     String mContentDescriptionCombinedSignal;
     String mContentDescriptionDataType;
+    String mContentDescriptionEthernet;
 
     // wifi
     final WifiManager mWifiManager;
@@ -140,6 +141,11 @@ public class NetworkControllerImpl extends BroadcastReceiver
     private Locale mLocale = null;
     private Locale mLastLocale = null;
 
+    //ethernet 
+    private boolean mEthernetConnected = false;
+    private int mEthernetIconId = 0;
+    private int mLastEthernetIconId = 0;
+
     // our ui
     Context mContext;
     ArrayList<TextView> mCombinedLabelViews = new ArrayList<TextView>();
@@ -167,6 +173,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 String contentDescription, String typeContentDescription, boolean roaming,
                 boolean isTypeIconWide);
         void setIsAirplaneMode(boolean is, int airplaneIcon);
+        void setEthernetIndicators(boolean visible, int ethernetIcon, String contentDescription);
     }
 
     private final WifiAccessPointController mAccessPoints;
@@ -377,6 +384,12 @@ public class NetworkControllerImpl extends BroadcastReceiver
                 mWifiEnabled && (mWifiConnected || !mHasMobileDataFeature),
                 mWifiIconId,
                 mContentDescriptionWifi);
+
+        cluster.setEthernetIndicators(
+                // only show ethernet in the cluster if connected
+		mEthernetConnected,
+		mEthernetIconId,
+		mContentDescriptionEthernet);
 
         if (mIsWimaxEnabled && mWimaxConnected) {
             // wimax is special
@@ -1099,6 +1112,16 @@ public class NetworkControllerImpl extends BroadcastReceiver
             mBluetoothTethered = false;
         }
 
+	if (info != null && info.getType() == ConnectivityManager.TYPE_ETHERNET) {
+             mEthernetConnected = info.isConnected();
+             mEthernetIconId = (mInetCondition == 1
+                     ? R.drawable.stat_sys_ether_fully
+                     : R.drawable.stat_sys_ether);
+        } else {
+             mEthernetConnected = false;
+             mEthernetIconId = 0;
+        }
+ 
         // We want to update all the icons, all at once, for any condition change
         updateDataNetType();
         updateWimaxIcons();
@@ -1188,7 +1211,12 @@ public class NetworkControllerImpl extends BroadcastReceiver
 
         final boolean ethernetConnected = (mConnectedNetworkType == ConnectivityManager.TYPE_ETHERNET);
         if (ethernetConnected) {
+            if (DEBUG) Log.d(TAG, "refreshViews(): ethernet is connected");
             combinedLabel = context.getString(R.string.ethernet_label);
+	    mContentDescriptionEthernet = combinedLabel;
+        }
+        else {
+            if (DEBUG) Log.d(TAG, "refreshViews(): ethernet is not connected");
         }
 
         if (mAirplaneMode &&
@@ -1282,6 +1310,7 @@ public class NetworkControllerImpl extends BroadcastReceiver
          || mLastInetCondition              != mInetCondition
          || mLastWimaxIconId                != mWimaxIconId
          || mLastDataTypeIconId             != mDataTypeIconId
+	 || mLastEthernetIconId             != mEthernetIconId
          || mLastAirplaneMode               != mAirplaneMode
          || mLastLocale                     != mLocale
          || mLastConnectedNetworkType       != mConnectedNetworkType)
@@ -1330,6 +1359,11 @@ public class NetworkControllerImpl extends BroadcastReceiver
         // the combined data signal icon
         if (mLastCombinedSignalIconId != combinedSignalIconId) {
             mLastCombinedSignalIconId = combinedSignalIconId;
+        }
+
+	// the ethernet icon
+	if (mLastEthernetIconId != mEthernetIconId) {
+            mLastEthernetIconId = mEthernetIconId;
         }
 
         // the data network type overlay
