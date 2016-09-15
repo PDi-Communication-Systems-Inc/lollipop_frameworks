@@ -25,7 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-
+import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel.SecurityMode;
 
@@ -403,6 +403,17 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
         }
 
         mCurrentSecuritySelection = securityMode;
+
+      /*  if(securityMode == SecurityMode.PIN){
+         TextView txPinEntry = (TextView) findViewById(R.id.pinEntry);
+         if(txPinEntry != null){
+       txPinEntry.requestFocus();
+         }
+         else {
+         Log.e(TAG,"showSecurityScreen(): could not find pin entry widget");
+         }
+        }  */
+
         mSecurityCallback.onSecurityModeChanged(securityMode,
                 securityMode != SecurityMode.None && newView.needsInput());
     }

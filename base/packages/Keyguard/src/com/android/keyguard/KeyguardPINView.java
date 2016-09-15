@@ -21,7 +21,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-
+import android.content.pm.PackageManager;
 import java.io.IOException;
 import android.util.Log;
 import android.app.ActivityManager;
@@ -179,9 +179,10 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
                                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 getContext().startActivity(intent); */
                                  
-                                Intent intent = getPackageManager().getLaunchIntentForPackage("com.pdiarm.newuserconfirmation");
+                                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.pdiarm.newuserconfirmation");
                                 if(intent != null)
                                      {
+                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                    getContext().startActivity(intent);
                                  }
 
