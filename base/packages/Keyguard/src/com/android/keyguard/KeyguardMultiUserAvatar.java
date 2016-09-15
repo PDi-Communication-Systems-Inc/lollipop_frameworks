@@ -44,7 +44,7 @@ class KeyguardMultiUserAvatar extends FrameLayout {
     private UserInfo mUserInfo;
     private static final float ACTIVE_ALPHA = 1.0f;
     private static final float INACTIVE_ALPHA = 1.0f;
-    private static final float ACTIVE_SCALE = 1.5f;
+    private static final float ACTIVE_SCALE = 2.0f;
     private static final float ACTIVE_TEXT_ALPHA = 0f;
     private static final float INACTIVE_TEXT_ALPHA = 0.5f;
     private static final int SWITCH_ANIMATION_DURATION = 150;
@@ -141,6 +141,14 @@ class KeyguardMultiUserAvatar extends FrameLayout {
                         com.android.internal.R.drawable.ic_contact_picture);
             }
 
+             if (DEBUG) Log.v(TAG,"mFrameShadowColor=" + Integer.toHexString(mFrameShadowColor));
+
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mUserImage.getLayoutParams();
+               
+            int totalIconSize = (int) mIconSize + lp.bottomMargin + lp.topMargin + lp.leftMargin + lp.rightMargin;
+             if (DEBUG) Log.v(TAG,"totalIconSize="+totalIconSize+" bottomMargin=" + lp.bottomMargin);
+            
+
             mFramed = new KeyguardCircleFramedDrawable(icon, (int) mIconSize, mFrameColor, mStroke,
                     mFrameShadowColor, mShadowRadius, mHighlightColor);
             MultiUserAvatarCache.getInstance().put(user.id, mFramed);
@@ -175,7 +183,7 @@ class KeyguardMultiUserAvatar extends FrameLayout {
             final Runnable onComplete) {
         final float finalAlpha = active ? mActiveAlpha : mInactiveAlpha;
         final float initAlpha = active ? mInactiveAlpha : mActiveAlpha;
-        final float finalScale = active ? 1f : 1f / mActiveScale;
+        final float finalScale = active ? 0.67f : 1f / mActiveScale;
         final float initScale = mFramed.getScale();
         final int finalTextAlpha = active ? (int) (mActiveTextAlpha * 255) :
                 (int) (mInactiveTextAlpha * 255);
