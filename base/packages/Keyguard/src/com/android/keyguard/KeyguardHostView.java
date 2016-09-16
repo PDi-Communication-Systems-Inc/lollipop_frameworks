@@ -49,7 +49,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RemoteViews.OnClickHandler;
-
+import android.widget.TextView;
 import java.lang.ref.WeakReference;
 
 public class KeyguardHostView extends KeyguardViewBase {
