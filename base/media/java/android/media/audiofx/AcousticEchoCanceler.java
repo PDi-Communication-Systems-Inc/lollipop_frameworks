@@ -62,6 +62,7 @@ public class AcousticEchoCanceler extends AudioEffect {
         AcousticEchoCanceler aec = null;
         try {
             aec = new AcousticEchoCanceler(audioSession);
+	    Log.d(TAG, "Created AEC attached to audio session " + audioSession);
         } catch (IllegalArgumentException e) {
             Log.w(TAG, "not implemented on this device"+ aec);
         } catch (UnsupportedOperationException e) {
