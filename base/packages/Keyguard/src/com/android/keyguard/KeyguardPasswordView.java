@@ -23,8 +23,12 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.content.Intent;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
@@ -33,6 +37,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import java.io.IOException;
+
 
 import java.util.List;
 /**
@@ -50,6 +56,8 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
     private TextView mPasswordEntry;
     private Interpolator mLinearOutSlowInInterpolator;
     private Interpolator mFastOutLinearInInterpolator;
+    private static final String TAG="LockPatternKeyguardPasswordView";
+
 
     public KeyguardPasswordView(Context context) {
         this(context, null);
@@ -175,6 +183,68 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
                 mPasswordEntry.setLayoutParams(params);
             }
         }
+
+        View newUser = findViewById(R.id.im_a_new_user);
+        if (newUser != null) {
+            newUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                                //Error:In some cases the new user confirmation app does not come to the foreground
+                                //Fix: kill the existing new user confirmation app and start a new one
+
+                                //switch to admin user
+                                try {
+                                        Process p = null;
+                                        p = Runtime.getRuntime().exec("/system/bin/am switch-user 0");
+                                        p.waitFor();
+                                        Thread.sleep(500);
+                                        }
+                                        catch (IOException e) {
+                                        // TODO Code to run in input/output exception
+                                        if ((e != null) && (e.getMessage() != null))
+                                                Log.e(TAG, e.getMessage());
+                                        Log.e(TAG, "IOException - the requested program could not be executed ");
+                                        }
+                                        catch (Exception e) {
+                                       // TODO Code to run in input/output exception
+                                                Log.e(TAG, "General Exception");
+                                        }
+
+                                ActivityManager manager =  (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+                                List<RunningAppProcessInfo> activities = ((ActivityManager) manager).getRunningAppProcesses(); // returns null if no running processes
+
+                                if(activities != null) {
+                                        for (int i = 0; i < activities.size(); i++){
+                                                Log.i(TAG, "Found App:" + activities.get(i).processName);
+
+
+                                 if (activities.get(i).processName.equals("com.pdiarm.newuserconfirmation")){
+                                                        Log.i(TAG, "App " + activities.get(i).processName + "found to be running, going to kill it");
+                                                        android.os.Process.killProcess(activities.get(i).pid);
+                                                        break;
+                                                }
+                                        }
+
+                                        try {
+                                                Thread.sleep(1000); //sleep for a second
+                                        }
+                                        catch (Exception e) {
+                                                if((e != null) && (e.getMessage() != null))
+                                                                Log.e(TAG,e.getMessage());
+                                        }
+                                }
+                                Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.pdiarm.newuserconfirmation");
+                                if(intent != null)
+                                     {
+                                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                   getContext().startActivity(intent);
+                                 }
+
+                }
+            });
+        }
+
+
     }
 
     @Override
