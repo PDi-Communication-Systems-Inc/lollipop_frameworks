@@ -1194,6 +1194,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mNavigationBarCanMove = shortSizeDp < 600;
 
         mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+        //if device type is tablet force enable NavigationBar and forbid NavigationBar move
+        String deviceType = SystemProperties.get("sys.device.type");
+        if (! "".equals(deviceType) && deviceType.equals("tablet")) {
+            mNavigationBarCanMove = false;
+            mHasNavigationBar = true;
+        }
+
         // Allow a system property to override this. Used by the emulator.
         // See also hasNavigationBar().
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
@@ -1201,14 +1208,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mHasNavigationBar = false;
         } else if ("0".equals(navBarOverride)) {
             mHasNavigationBar = true;
-        }
-
-        //if device type is tablet force enable NavigationBar and forbid NavigationBar move
-        String deviceType = SystemProperties.get("sys.device.type");
-        if (! "".equals(deviceType) && deviceType.equals("tablet")) {
-            mNavigationBarCanMove = false;
-            mHasNavigationBar = true;
-        }
+        } 
 
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
         // By default, HDMI locks rotation to landscape.
