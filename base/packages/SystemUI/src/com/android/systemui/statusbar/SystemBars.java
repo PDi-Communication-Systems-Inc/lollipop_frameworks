@@ -88,27 +88,38 @@ public class SystemBars extends SystemUI implements ServiceMonitor.Callbacks {
         if (DEBUG) Log.d(TAG, "createStatusBarFromConfig");
         final String clsName = mContext.getString(R.string.config_statusBarComponent);
         if (clsName == null || clsName.length() == 0) {
-            throw andLog("No status bar component configured", null);
+	    Log.i(TAG, "createStatusBarFromConfig(): PDi - Purposefully not configuring status bar component");
+            //throw andLog("No status bar component configured", null);
         }
         Class<?> cls = null;
         try {
             cls = mContext.getClassLoader().loadClass(clsName);
         } catch (Throwable t) {
-            throw andLog("Error loading status bar component: " + clsName, t);
+            Log.i(TAG, "createStatusBarFromConfig(): PDi -- Purposefully not setting a context");
+            // throw andLog("Error loading status bar component: " + clsName, t);
         }
         try {
             mStatusBar = (BaseStatusBar) cls.newInstance();
         } catch (Throwable t) {
-            throw andLog("Error creating status bar component: " + clsName, t);
+            Log.i(TAG, "createStatusBarFromConfig(): PDi - Purposefully not creating Status bar component: "+ clsName);
+            //throw andLog("Error creating status bar component: " + clsName, t);
         }
-        mStatusBar.mContext = mContext;
-        mStatusBar.mComponents = mComponents;
+        if (mStatusBar != null) {
+
+           if (mContext != null) {
+              mStatusBar.mContext = mContext;
+           }
+           if (mComponents != null) {
+              mStatusBar.mComponents = mComponents;
+           }
         mStatusBar.start();
         if (DEBUG) Log.d(TAG, "started " + mStatusBar.getClass().getSimpleName());
+        }
     }
-
+/*
     private RuntimeException andLog(String msg, Throwable t) {
-        Log.w(TAG, msg, t);
-        throw new RuntimeException(msg, t);
+         Log.w(TAG, msg, t);
+         throw new RuntimeException(msg, t);
     }
+*/
 }
