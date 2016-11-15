@@ -3302,6 +3302,49 @@ public final class ActivityManagerService extends ActivityManagerNative
         return intent;
     }
 
+  boolean isLauncherDefault() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo res = mContext.getPackageManager().resolveActivity(intent, 0);
+        if (res.activityInfo == null) {
+           Log.i(TAG,"SAGAR activity info is null ");
+            return false;
+        } else if ("android".equals(res.activityInfo.packageName)) {
+           Log.i(TAG,"SAGAR activity info android - "+ res.activityInfo.packageName);
+            return false;
+        } else {
+            if (res.activityInfo.packageName.equals("com.teslacoilsw.launcher")) {
+           Log.i(TAG,"SAGAR activity equal ");
+                return true; 
+            } else {
+           Log.i(TAG,"SAGAR activity not equal ");
+                return false;
+            }
+        }
+    }
+
+
+private  ComponentName[] getActivitiesListByActionAndCategory (Context context, String action, String category) {
+   Intent queryIntent = new Intent(action);
+   queryIntent.addCategory(category);
+   List<ResolveInfo> resInfos = context.getPackageManager().queryIntentActivities(queryIntent, PackageManager.MATCH_DEFAULT_ONLY);
+   ComponentName[] componentNames = new ComponentName[resInfos.size()];
+   for (int i = 0; i < resInfos.size(); i++) {
+      ActivityInfo activityInfo = resInfos.get(i).activityInfo;
+      componentNames[i] = new ComponentName(activityInfo.packageName, activityInfo.name); }
+   return componentNames; 
+}
+
+  void addLauncher2PrefActivity() {
+  Log.i(TAG,"SAGAR addLauncher2PrefActivity() ");
+     IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
+   filter.addCategory(Intent.CATEGORY_HOME);
+   filter.addCategory(Intent.CATEGORY_DEFAULT);
+   ComponentName[] currentHomeActivities = getActivitiesListByActionAndCategory(mContext, Intent.ACTION_MAIN, Intent.CATEGORY_HOME);
+   ComponentName newPreferredActivity = new ComponentName("com.android.launcher", "com.android.launcher2.Launcher");
+   mContext.getPackageManager().addPreferredActivity(filter, IntentFilter.MATCH_CATEGORY_EMPTY, currentHomeActivities, newPreferredActivity);
+  }
+
     boolean startHomeActivityLocked(int userId) {
         if (mFactoryTest == FactoryTest.FACTORY_TEST_LOW_LEVEL
                 && mTopAction == null) {
@@ -3310,16 +3353,40 @@ public final class ActivityManagerService extends ActivityManagerNative
             // error message and don't try to start anything.
             return false;
         }
+        if(!isLauncherDefault()) {
+  Log.i(TAG,"SAGAR default launcher is not set hence setting it ");
+           mContext.getPackageManager().clearPackagePreferredActivities("com.teslacoilsw.launcher");
+           addLauncher2PrefActivity();
+          }
         Intent intent = getHomeIntent();
         ActivityInfo aInfo =
             resolveActivityInfo(intent, STOCK_PM_FLAGS, userId);
         if (aInfo != null) {
-            intent.setComponent(new ComponentName(
-                    aInfo.applicationInfo.packageName, aInfo.name));
-            // Don't do this if the home app is currently being
-            // instrumented.
             aInfo = new ActivityInfo(aInfo);
             aInfo.applicationInfo = getAppInfoForUser(aInfo.applicationInfo, userId);
+            if(aInfo.processName.equals("com.android.launcher") ) {
+               intent.setComponent(new ComponentName("com.android.launcher", "com.android.launcher2.Launcher"));
+               Log.i(TAG,"SAGAR launcher check ");
+            } else {
+               Log.i(TAG,"SAGAR other before change package name - " +aInfo.applicationInfo.packageName +" name - "+aInfo.name);
+               if(aInfo.name.equals("com.android.internal.app.ResolverActivity")) {
+               Log.i(TAG,"SAGAR  resolveerActivity");
+                  intent.setComponent(new ComponentName("com.android.launcher", "com.android.launcher2.Launcher"));
+                  aInfo.name = "com.android.launcher2.Launcher";
+                  aInfo.applicationInfo.packageName = "com.android.launcher";
+                  aInfo.processName = "com.android.launcher";
+               } else {
+               Log.i(TAG,"SAGAR  else case package name - " +aInfo.applicationInfo.packageName +" name - "+aInfo.name);
+                    intent.setComponent(new ComponentName(
+                    aInfo.applicationInfo.packageName, aInfo.name));
+               }
+               Log.i(TAG,"SAGAR other  after change package name - " +aInfo.applicationInfo.packageName +" name - "+aInfo.name);
+            }
+            // Don't do this if the home app is currently being
+            // instrumented.
+            //aInfo = new ActivityInfo(aInfo);
+            //aInfo.applicationInfo = getAppInfoForUser(aInfo.applicationInfo, userId);
+            Log.i(TAG,"SAGAR process name - "+aInfo.processName + " uid - "+ aInfo.applicationInfo.uid );
             ProcessRecord app = getProcessRecordLocked(aInfo.processName,
                     aInfo.applicationInfo.uid, true);
             if (app == null || app.instrumentationClass == null) {
@@ -3354,6 +3421,31 @@ public final class ActivityManagerService extends ActivityManagerNative
         return ai;
     }
 
+
+/*
+    private ActivityInfo resolveActivityInfo(Intent intent, int flags, int userId) {
+        ActivityInfo ai = null;
+        ComponentName comp = intent.getComponent();
+        try {
+            if (comp != null) {
+                ai = AppGlobals.getPackageManager().getActivityInfo(comp, flags, userId);
+            } else {
+                ResolveInfo info = AppGlobals.getPackageManager().resolveIntent(
+                        intent,
+                        intent.resolveTypeIfNeeded(mContext.getContentResolver()),
+                            flags, userId);
+
+                if (info != null) {
+                    ai = info.activityInfo;
+                }
+            }
+        } catch (RemoteException e) {
+            // ignore
+        }
+
+        return ai;
+    }
+*/
     /**
      * Starts the "new version setup screen" if appropriate.
      */
@@ -9523,6 +9615,7 @@ public final class ActivityManagerService extends ActivityManagerNative
                             cpi.applicationInfo.uid, name);
                     return null;
                 }
+                Log.i(TAG,"SAGAR launching app - "+cpr.launchingApp);
                 try {
                     if (DEBUG_MU) {
                         Slog.v(TAG_MU, "Waiting to start provider " + cpr + " launchingApp="
@@ -11118,6 +11211,37 @@ public final class ActivityManagerService extends ActivityManagerNative
         }
     }
 
+private  ComponentName[] getActivitiesListByActionAndCategory (String action, String category) {
+   Intent queryIntent = new Intent(action);
+   queryIntent.addCategory(category);
+   List<ResolveInfo> resInfos = mContext.getPackageManager().queryIntentActivities(queryIntent, PackageManager.MATCH_DEFAULT_ONLY);
+   ComponentName[] componentNames = new ComponentName[resInfos.size()];
+   for (int i = 0; i < resInfos.size(); i++) {
+      ActivityInfo activityInfo = resInfos.get(i).activityInfo;
+      componentNames[i] = new ComponentName(activityInfo.packageName, activityInfo.name); }
+   return componentNames; }
+
+private void setDefaultLauncher() {
+  if(!isLauncherDefault()) {
+     mContext.getPackageManager().clearPackagePreferredActivities("com.teslacoilsw.launcher");
+     }
+
+   IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
+   filter.addCategory(Intent.CATEGORY_HOME);
+   filter.addCategory(Intent.CATEGORY_DEFAULT);
+   ComponentName[] currentHomeActivities = getActivitiesListByActionAndCategory(Intent.ACTION_MAIN, Intent.CATEGORY_HOME);
+   ComponentName newPreferredActivity = new ComponentName("com.android.launcher", "com.android.launcher2.Launcher");
+   mContext.getPackageManager().addPreferredActivity(filter, IntentFilter.MATCH_CATEGORY_EMPTY, currentHomeActivities, newPreferredActivity);
+
+   Intent intent = new Intent(Intent.ACTION_MAIN);
+   intent.setClassName("com.android.launcher", "com.android.launcher2.Launcher");
+   intent.addCategory(Intent.CATEGORY_LAUNCHER);
+   intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//  mContext.startActivityAsUser(intent, mCurrentUserId);
+
+//   startActivity(intent);
+startHomeActivityLocked(mCurrentUserId);
+}
     private boolean deliverPreBootCompleted(final Runnable onFinishCallback,
             ArrayList<ComponentName> doneReceivers, int userId) {
         boolean waitingUpdate = false;
@@ -11355,7 +11479,9 @@ public final class ActivityManagerService extends ActivityManagerNative
 
             // Start up initial activity.
             mBooting = true;
-            startHomeActivityLocked(mCurrentUserId);
+            //startHomeActivityLocked(mCurrentUserId);
+            setDefaultLauncher();
+ 
 
             try {
                 if (AppGlobals.getPackageManager().hasSystemUidErrors()) {

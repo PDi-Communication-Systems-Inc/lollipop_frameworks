@@ -164,18 +164,34 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
         return intent;
     }
 
+    public void printLaunchers() {
+        PackageManager pm = getPackageManager();
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        Log.d(TAG, "SAGAR in printLaunchers");
+        List<ResolveInfo> lst = pm.queryIntentActivities(i, 0);
+        for (ResolveInfo resolveInfo : lst) {
+            Log.d(TAG, "New Launcher Found: package name - " + resolveInfo.activityInfo.packageName +" activity info name = "+ resolveInfo.activityInfo.name);
+        }
+        Thread.dumpStack();
+        pm.clearPackagePreferredActivities("com.teslacoilsw.launcher");
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Use a specialized prompt when we're handling the 'Home' app startActivity()
         final Intent intent = makeMyIntent();
         final Set<String> categories = intent.getCategories();
-        if (Intent.ACTION_MAIN.equals(intent.getAction())
+        if (Intent.ACTION_MAIN.equals(intent.getAction()) 
                 && categories != null
                 && categories.size() == 1
                 && categories.contains(Intent.CATEGORY_HOME)) {
             // Note: this field is not set to true in the compatibility version.
-            mResolvingHome = true;
+            //mResolvingHome = true;
+             mResolvingHome=false;
         }
+       printLaunchers(); 
 
         setSafeForwardingMode(true);
 
@@ -189,6 +205,9 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState, Intent intent,
             CharSequence title, Intent[] initialIntents,
             List<ResolveInfo> rList, boolean alwaysUseOption) {
+            for (ResolveInfo resolveInfo : rList) {
+            Log.d("SAGAR", "resolverActivity Package name - " + resolveInfo.activityInfo.packageName +" activity info name = "+ resolveInfo.activityInfo.name);
+        }
         onCreate(savedInstanceState, intent, title, 0, initialIntents, rList, alwaysUseOption);
     }
 
@@ -204,6 +223,8 @@ public class ResolverActivity extends Activity implements AdapterView.OnItemClic
             mLaunchedFromUid = -1;
         }
         mPm = getPackageManager();
+        Log.i(TAG, "SAGAR clearning package nova");
+        mPm.clearPackagePreferredActivities("com.teslacoilsw.launcher");
         mUsm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
 
         final long sinceTime = System.currentTimeMillis() - USAGE_STATS_PERIOD;
