@@ -3390,6 +3390,7 @@ private  ComponentName[] getActivitiesListByActionAndCategory (Context context, 
             ProcessRecord app = getProcessRecordLocked(aInfo.processName,
                     aInfo.applicationInfo.uid, true);
             if (app == null || app.instrumentationClass == null) {
+                 Log.i(TAG,"SAGAR starthomeActivity ");
                 intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NEW_TASK);
                 mStackSupervisor.startHomeActivity(intent, aInfo);
             }
