@@ -222,7 +222,7 @@ import java.io.PrintWriter;
  */
 public class InputMethodService extends AbstractInputMethodService {
     static final String TAG = "InputMethodService";
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
 
     /**
      * The back button will close the input window.
@@ -404,9 +404,9 @@ public class InputMethodService extends AbstractInputMethodService {
             if (DEBUG) Log.v(TAG, "hideSoftInput()");
             boolean wasVis = isInputViewShown();
             mShowInputFlags = 0;
-            mShowInputRequested = false;
-            mShowInputForced = false;
-            doHideWindow();
+            mShowInputRequested = true;
+            mShowInputForced = true;
+            // doHideWindow();
             if (resultReceiver != null) {
                 resultReceiver.send(wasVis != isInputViewShown()
                         ? InputMethodManager.RESULT_HIDDEN
@@ -699,8 +699,8 @@ public class InputMethodService extends AbstractInputMethodService {
     void initViews() {
         mInitialized = false;
         mWindowCreated = false;
-        mShowInputRequested = false;
-        mShowInputForced = false;
+        mShowInputRequested = true;
+        mShowInputForced = true;
         
         mThemeAttrs = obtainStyledAttributes(android.R.styleable.InputMethodService);
         mRootView = mInflater.inflate(
@@ -1738,7 +1738,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * InputMethodManager.HIDE_IMPLICIT_ONLY} bit set.
      */
     public void requestHideSelf(int flags) {
-        mImm.hideSoftInputFromInputMethod(mToken, flags);
+       mImm.hideSoftInputFromInputMethod(mToken, flags);
     }
     
     /**
