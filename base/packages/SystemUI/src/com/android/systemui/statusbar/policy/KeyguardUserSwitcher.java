@@ -94,7 +94,10 @@ public class KeyguardUserSwitcher {
      * @see android.os.UserManager#isUserSwitcherEnabled()
      */
     private boolean shouldExpandByDefault() {
-        return (mUserSwitcherController != null) && mUserSwitcherController.isSimpleUserSwitcher();
+     // return always true to show swicher expanded when the device is in lock screen
+        return true;
+     // the following code is not to show switcher expanded by default 
+     // return (mUserSwitcherController != null) && mUserSwitcherController.isSimpleUserSwitcher();
     }
 
     public void show(boolean animate) {
