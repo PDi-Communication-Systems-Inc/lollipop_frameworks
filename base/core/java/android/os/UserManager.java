@@ -1063,10 +1063,11 @@ public class UserManager {
     public static int getMaxSupportedUsers() {
         // Don't allow multiple users on certain builds
         if (android.os.Build.ID.startsWith("JVP")) return 1;
-        // Svelte devices don't get multi-user.
-        if (ActivityManager.isLowRamDeviceStatic()) return 1;
-        return SystemProperties.getInt("fw.max_users",
-                Resources.getSystem().getInteger(R.integer.config_multiuserMaximumUsers));
+        String maxUsersCount = SystemProperties.get("persist.sys.max_users");
+        if(maxUsersCount == null || maxUsersCount == "" || maxUsersCount.isEmpty()) {
+           return 8; //default 8
+        }
+        return Integer.parseInt(maxUsersCount);
     }
 
     /**
