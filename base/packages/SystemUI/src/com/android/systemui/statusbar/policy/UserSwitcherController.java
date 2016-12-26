@@ -146,11 +146,7 @@ public class UserSwitcherController {
 
                 for (UserInfo info : infos) {
                     boolean isCurrent = currentId == info.id;
-                    if (info.isGuest()) {
-                        guestRecord = new UserRecord(info, null /* picture */,
-                                true /* isGuest */, isCurrent, false /* isAddUser */,
-                                false /* isRestricted */);
-                    } else if (info.supportsSwitchTo()) {
+                    if (info.supportsSwitchTo()) {
                         Bitmap picture = bitmaps.get(info.id);
                         if (picture == null) {
                             picture = mUserManager.getUserIcon(info.id);
@@ -163,36 +159,6 @@ public class UserSwitcherController {
                         records.add(index, new UserRecord(info, picture, false /* isGuest */,
                                 isCurrent, false /* isAddUser */, false /* isRestricted */));
                     }
-                }
-
-                boolean ownerCanCreateUsers = !mUserManager.hasUserRestriction(
-                        UserManager.DISALLOW_ADD_USER, UserHandle.OWNER);
-                boolean currentUserCanCreateUsers =
-                        (currentId == UserHandle.USER_OWNER) && ownerCanCreateUsers;
-                boolean anyoneCanCreateUsers = ownerCanCreateUsers && addUsersWhenLocked;
-                boolean canCreateGuest = (currentUserCanCreateUsers || anyoneCanCreateUsers)
-                        && guestRecord == null;
-                boolean canCreateUser = (currentUserCanCreateUsers || anyoneCanCreateUsers)
-                        && mUserManager.canAddMoreUsers();
-                boolean createIsRestricted = !addUsersWhenLocked;
-
-                if (!mSimpleUserSwitcher) {
-                    if (guestRecord == null) {
-                        if (canCreateGuest) {
-                            records.add(new UserRecord(null /* info */, null /* picture */,
-                                    true /* isGuest */, false /* isCurrent */,
-                                    false /* isAddUser */, createIsRestricted));
-                        }
-                    } else {
-                        int index = guestRecord.isCurrent ? 0 : records.size();
-                        records.add(index, guestRecord);
-                    }
-                }
-
-                if (!mSimpleUserSwitcher && canCreateUser) {
-                    records.add(new UserRecord(null /* info */, null /* picture */,
-                            false /* isGuest */, false /* isCurrent */, true /* isAddUser */,
-                            createIsRestricted));
                 }
 
                 return records;
