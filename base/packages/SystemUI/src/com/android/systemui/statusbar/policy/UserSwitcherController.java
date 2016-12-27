@@ -406,6 +406,8 @@ public class UserSwitcherController {
     public static final class UserRecord {
         public final UserInfo info;
         public final Bitmap picture;
+        // TODO  Guest user and option to add user functionality has been removed 
+        // but still some code clean up is needed as these are referenced in few places
         public final boolean isGuest;
         public final boolean isCurrent;
         public final boolean isAddUser;
