@@ -2535,10 +2535,10 @@ public final class PowerManagerService extends SystemService
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_USER_ACTIVITY_TIMEOUT:
-                    handleUserActivityTimeout();
+                    // handleUserActivityTimeout();
                     break;
                 case MSG_SANDMAN:
-                    handleSandman();
+                    // handleSandman();
                     break;
             }
         }
