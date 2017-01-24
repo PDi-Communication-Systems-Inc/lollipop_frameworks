@@ -316,10 +316,13 @@ public class StatusBarKeyguardViewManager {
      * @return whether the back press has been handled
      */
     public boolean onBackPressed() {
+        Slog.v(TAG, "onBackPressed(): back button pressed");
         if (mBouncer.isShowing()) {
             reset();
+            Slog.v(TAG, "onBackPressed(): reset called returning true");
             return true;
         }
+        Slog.v(TAG, "onBackPressed(): returning false");
         return false;
     }
 

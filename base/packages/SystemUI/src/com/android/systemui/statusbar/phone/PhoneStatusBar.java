@@ -109,6 +109,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.util.Slog;
 
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.keyguard.KeyguardHostView.OnDismissAction;
@@ -3704,10 +3705,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     }
 
     public boolean onBackPressed() {
+        Slog.v(TAG, "onBackPressed()");
         if (mStatusBarKeyguardViewManager.onBackPressed()) {
+            Slog.v(TAG, "onBackPressed(): true result from keyguard view manager");
             return true;
         }
         if (mNotificationPanel.isQsExpanded()) {
+            Slog.v(TAG, "onBackPressed(): quicksettings expanded, handling");
             if (mNotificationPanel.isQsDetailShowing()) {
                 mNotificationPanel.closeQsDetail();
             } else {
@@ -3716,9 +3720,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             return true;
         }
         if (mState != StatusBarState.KEYGUARD && mState != StatusBarState.SHADE_LOCKED) {
+            Slog.v(TAG, "onBackPressed(): keyguard and shade locked, collapse panel");
             animateCollapsePanels();
             return true;
         }
+        Slog.v(TAG, "onBackPressed(): ignoring");
         return false;
     }
 

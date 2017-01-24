@@ -203,7 +203,7 @@ import java.util.concurrent.TimeUnit;
  * </ul>
  */
 public final class InputMethodManager {
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     static final String TAG = "InputMethodManager";
 
     static final String PENDING_EVENT_COUNTER = "aq:imm";
@@ -1025,6 +1025,7 @@ public final class InputMethodManager {
      * 0 or have the {@link #HIDE_IMPLICIT_ONLY} bit set.
      */
     public boolean hideSoftInputFromWindow(IBinder windowToken, int flags) {
+        Log.v(TAG, "hideSoftInputFromWindow() called with no resultReceiver but with flags=" + flags);
         return hideSoftInputFromWindow(windowToken, flags, null);
     }
     
@@ -1046,16 +1047,22 @@ public final class InputMethodManager {
      */
     public boolean hideSoftInputFromWindow(IBinder windowToken, int flags,
             ResultReceiver resultReceiver) {
+        Log.v(TAG, "hideSoftInputFromWindow() called with flags=" + flags);
         checkFocus();
         synchronized (mH) {
             if (mServedView == null || mServedView.getWindowToken() != windowToken) {
+                if (DEBUG) Log.d(TAG, "hideSoftInputFromWindow(): served view is null or served " + 
+                                      "view window token does not match binder token");
                 return false;
             }
 
             try {
+                if (DEBUG) Log.d(TAG, "hideSoftInputFromWindow(): calling service " + 
+                                      "method hideSoftInput");
                 return mService.hideSoftInput(mClient, flags, resultReceiver);
             } catch (RemoteException e) {
             }
+	    Log.e(TAG, "hideSoftInputFromWindow(): failed");
             return false;
         }
     }
@@ -1076,13 +1083,18 @@ public final class InputMethodManager {
      **/
     public void toggleSoftInputFromWindow(IBinder windowToken, int showFlags, int hideFlags) {
         synchronized (mH) {
+            if (DEBUG) Log.d(TAG, "toggleSoftInputFromWindow() called, showFlags=" + showFlags
+                                  + " hideFlags=" + hideFlags);
             if (mServedView == null || mServedView.getWindowToken() != windowToken) {
+                Log.e(TAG, "View or window token not valid");
                 return;
             }
             if (mCurMethod != null) {
                 try {
+                    if (DEBUG) Log.d(TAG, "toggleSoftInputFromWindow(): call toggleSoftInput");
                     mCurMethod.toggleSoftInput(showFlags, hideFlags);
                 } catch (RemoteException e) {
+                     if (DEBUG) Log.e(TAG, "toggleSoftInputFromWindow(): exception" + e.toString());
                 }
             }
         }
@@ -1101,8 +1113,13 @@ public final class InputMethodManager {
      * @hide
      */
     public void toggleSoftInput(int showFlags, int hideFlags) {
+        if (DEBUG) Log.d(TAG, "toggleSoftInput(): called, showFlags=" + showFlags 
+                              + " hideFlags=" + hideFlags);
+
         if (mCurMethod != null) {
             try {
+                if (DEBUG) Log.d (TAG, "toggleSoftInput(): called, calling toogleSoftInput"
+                                       + " of current method");
                 mCurMethod.toggleSoftInput(showFlags, hideFlags);
             } catch (RemoteException e) {
             }
@@ -1706,6 +1723,7 @@ public final class InputMethodManager {
      */
     public void hideSoftInputFromInputMethod(IBinder token, int flags) {
         try {
+	    if (DEBUG) Log.v(TAG, "hideSoftInputFromInputMethod(): calling hideMySoftInput");
             mService.hideMySoftInput(token, flags);
         } catch (RemoteException e) {
             throw new RuntimeException(e);

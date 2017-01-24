@@ -2472,11 +2472,14 @@ public class Activity extends ContextThemeWrapper
      * but you can override this to do whatever you want.
      */
     public void onBackPressed() {
+        Slog.v(TAG, "onBackPressed() base activity, normally overridden by app");
         if (mActionBar != null && mActionBar.collapseActionView()) {
+            Slog.v(TAG, "onBackPressed(): collapsing action view");
             return;
         }
 
         if (!mFragments.popBackStackImmediate()) {
+            Slog.v(TAG, "onBackPressed(): done handling fragments, finish transition");
             finishAfterTransition();
         }
     }

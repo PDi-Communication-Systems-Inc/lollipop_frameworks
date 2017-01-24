@@ -33,6 +33,7 @@ import android.view.ViewRootImpl;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.widget.FrameLayout;
+import android.util.Slog;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.BaseStatusBar;
@@ -122,9 +123,12 @@ public class StatusBarWindowView extends FrameLayout {
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         switch (event.getKeyCode()) {
             case KeyEvent.KEYCODE_BACK:
+                Slog.v(TAG, "dispatchKeyEvent(): KEYCODE_BACK");
                 if (!down) {
+		    Slog.v(TAG, "dispatchKeyEvent(): onBackPressed, calling service onBackPressed");
                     mService.onBackPressed();
                 }
+                Slog.v(TAG, "dispatchKeyEvent(): KEYCODE_BACK, down action on KEYCODE_BACK still");
                 return true;
             case KeyEvent.KEYCODE_MENU:
                 if (!down) {

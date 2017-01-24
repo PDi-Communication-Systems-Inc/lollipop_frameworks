@@ -132,7 +132,7 @@ import java.util.Locale;
  */
 public class InputMethodManagerService extends IInputMethodManager.Stub
         implements ServiceConnection, Handler.Callback {
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     static final String TAG = "InputMethodManagerService";
 
     static final int MSG_SHOW_IM_PICKER = 1;
@@ -1855,16 +1855,20 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
     }
 
     boolean showCurrentInputLocked(int flags, ResultReceiver resultReceiver) {
+        if (DEBUG) Slog.d(TAG, "showCurrentInputLocked(): called");
         mShowRequested = true;
         if ((flags&InputMethodManager.SHOW_IMPLICIT) == 0) {
+            if (DEBUG) Slog.d(TAG, "showCurrentInputLocked() implict flag set");
             mShowExplicitlyRequested = true;
         }
         if ((flags&InputMethodManager.SHOW_FORCED) != 0) {
+	    if (DEBUG) Slog.d(TAG, "showCurrentInputLocked(): forced flag set");
             mShowExplicitlyRequested = true;
             mShowForced = true;
         }
 
         if (!mSystemReady) {
+            Slog.e(TAG, "showCurrentInputLocked(): System not ready, returning false");
             return false;
         }
 
@@ -1900,7 +1904,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                         + ((mLastBindTime+TIME_TO_RECONNECT) - SystemClock.uptimeMillis()));
             }
         }
-
+        if (DEBUG) Slog.d(TAG, "showCurrentInputLocked(): returning res=" + res);
         return res;
     }
 
@@ -1932,7 +1936,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                     }
                 }
 
-                if (DEBUG) Slog.v(TAG, "Client requesting input be hidden");
+                if (DEBUG) Slog.d(TAG, "Client requesting input be hidden");
                 return hideCurrentInputLocked(flags, resultReceiver);
             }
         } finally {
@@ -1941,6 +1945,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
     }
 
     boolean hideCurrentInputLocked(int flags, ResultReceiver resultReceiver) {
+	if (DEBUG) Slog.d(TAG, "hideCurrentInputLocked(): called");
         if ((flags&InputMethodManager.HIDE_IMPLICIT_ONLY) != 0
                 && (mShowExplicitlyRequested || mShowForced)) {
             if (DEBUG) Slog.v(TAG, "Not hiding: explicit show not cancelled by non-explicit hide");
@@ -1950,10 +1955,14 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
             if (DEBUG) Slog.v(TAG, "Not hiding: forced show not cancelled by not-always hide");
             return false;
         }
+	if (DEBUG) Slog.v(TAG, "hideCurrentInputLocked(): mInputShown="+mInputShown + " mCurMethod=" + mCurMethod);
         boolean res;
         if (mInputShown && mCurMethod != null) {
-            executeOrSendMessage(mCurMethod, mCaller.obtainMessageOO(
-                    MSG_HIDE_SOFT_INPUT, mCurMethod, resultReceiver));
+            if (DEBUG) Slog.v(TAG, "hideCurrentInputLocked(): exec or send message to hide soft input");
+            Message siMsg = mCaller.obtainMessageOO(
+               MSG_HIDE_SOFT_INPUT, mCurMethod, resultReceiver); 
+            if (DEBUG) Slog.v(TAG, "hideCurrentInputLocked(): siMsg="+siMsg);
+            executeOrSendMessage(mCurMethod, siMsg);
             res = true;
         } else {
             res = false;
@@ -2429,6 +2438,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
             }
             long ident = Binder.clearCallingIdentity();
             try {
+                Slog.v(TAG, "hideMySoftInput(): calling hideCurrentInputLocked");
                 hideCurrentInputLocked(flags, null);
             } finally {
                 Binder.restoreCallingIdentity(ident);

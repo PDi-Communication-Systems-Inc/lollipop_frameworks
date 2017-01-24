@@ -406,7 +406,7 @@ public class InputMethodService extends AbstractInputMethodService {
             mShowInputFlags = 0;
             mShowInputRequested = true;
             mShowInputForced = true;
-            // doHideWindow();
+            doHideWindow();
             if (resultReceiver != null) {
                 resultReceiver.send(wasVis != isInputViewShown()
                         ? InputMethodManager.RESULT_HIDDEN
@@ -533,6 +533,9 @@ public class InputMethodService extends AbstractInputMethodService {
          * 
          */
         public void toggleSoftInput(int showFlags, int hideFlags) {
+	    if (DEBUG) Log.d(TAG, "toggleSoftInput(): showFlags=" + showFlags 
+                                  + " hideFlags="+ hideFlags + "calling " 
+                                  + " onToggleSoftInput()");
             InputMethodService.this.onToggleSoftInput(showFlags, hideFlags);
         }
 
@@ -1133,8 +1136,11 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     public boolean onEvaluateInputViewShown() {
         Configuration config = getResources().getConfiguration();
-        return config.keyboard == Configuration.KEYBOARD_NOKEYS
-                || config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES;
+        if (DEBUG) Log.d(TAG, "onEvaluateInputViewShown(): config="+config);
+        boolean viewShownResult = (config.keyboard == Configuration.KEYBOARD_NOKEYS)  
+                                  || (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES);
+        if (DEBUG) Log.d(TAG, "onEvaluateInputViewShown(): viewShownResult="+viewShownResult);
+        return viewShownResult;
     }
     
     /**
@@ -1414,7 +1420,7 @@ public class InputMethodService extends AbstractInputMethodService {
     }
     
     public void showWindow(boolean showInput) {
-        if (DEBUG) Log.v(TAG, "Showing window: showInput=" + showInput
+        if (DEBUG) Log.d(TAG, "Showing window: showInput=" + showInput
                 + " mShowInputRequested=" + mShowInputRequested
                 + " mWindowAdded=" + mWindowAdded
                 + " mWindowCreated=" + mWindowCreated
@@ -1451,7 +1457,7 @@ public class InputMethodService extends AbstractInputMethodService {
             showInput = true;
         }
 
-        if (DEBUG) Log.v(TAG, "showWindow: updating UI");
+        if (DEBUG) Log.d(TAG, "showWindow: updating UI");
         initialize();
         updateFullscreenMode();
         updateInputViewShown();
@@ -1460,21 +1466,21 @@ public class InputMethodService extends AbstractInputMethodService {
             mWindowAdded = true;
             mWindowCreated = true;
             initialize();
-            if (DEBUG) Log.v(TAG, "CALL: onCreateCandidatesView");
+            if (DEBUG) Log.d(TAG, "CALL: onCreateCandidatesView");
             View v = onCreateCandidatesView();
-            if (DEBUG) Log.v(TAG, "showWindow: candidates=" + v);
+            if (DEBUG) Log.d(TAG, "showWindow: candidates=" + v);
             if (v != null) {
                 setCandidatesView(v);
             }
         }
         if (mShowInputRequested) {
             if (!mInputViewStarted) {
-                if (DEBUG) Log.v(TAG, "CALL: onStartInputView");
+                if (DEBUG) Log.d(TAG, "CALL: onStartInputView");
                 mInputViewStarted = true;
                 onStartInputView(mInputEditorInfo, false);
             }
         } else if (!mCandidatesViewStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onStartCandidatesView");
+            if (DEBUG) Log.d(TAG, "CALL: onStartCandidatesView");
             mCandidatesViewStarted = true;
             onStartCandidatesView(mInputEditorInfo, false);
         }
@@ -1484,7 +1490,7 @@ public class InputMethodService extends AbstractInputMethodService {
         }
 
         if (!wasVisible) {
-            if (DEBUG) Log.v(TAG, "showWindow: showing!");
+            if (DEBUG) Log.d(TAG, "showWindow: showing!");
             mImm.setImeWindowStatus(mToken, IME_ACTIVE, mBackDisposition);
             onWindowShown();
             mWindow.show();
@@ -1493,10 +1499,10 @@ public class InputMethodService extends AbstractInputMethodService {
 
     private void finishViews() {
         if (mInputViewStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onFinishInputView");
+            if (DEBUG) Log.d(TAG, "CALL: onFinishInputView");
             onFinishInputView(false);
         } else if (mCandidatesViewStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onFinishCandidatesView");
+            if (DEBUG) Log.d(TAG, "CALL: onFinishCandidatesView");
             onFinishCandidatesView(false);
         }
         mInputViewStarted = false;
@@ -1504,18 +1510,23 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     private void doHideWindow() {
+        if (DEBUG) Log.d(TAG, "doHideWindow(): called");
         mImm.setImeWindowStatus(mToken, 0, mBackDisposition);
+        if (DEBUG) Log.d(TAG, "doHideWindow(): calling hideWindow()");
         hideWindow();
     }
 
     public void hideWindow() {
+        if (DEBUG) Log.d(TAG, "hideWindow(): called, calling finishViews()");
         finishViews();
         if (mWindowVisible) {
+            if (DEBUG) Log.d(TAG, "hideWindow(): window visible, hide it, call onWindowHideen()");
             mWindow.hide();
             mWindowVisible = false;
             onWindowHidden();
             mWindowWasVisible = false;
         }
+        if (DEBUG) Log.d(TAG, "hideWindow(): window was not visible");
     }
 
     /**
@@ -1574,16 +1585,16 @@ public class InputMethodService extends AbstractInputMethodService {
     
     void doFinishInput() {
         if (mInputViewStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onFinishInputView");
+            if (DEBUG) Log.d(TAG, "CALL: onFinishInputView");
             onFinishInputView(true);
         } else if (mCandidatesViewStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onFinishCandidatesView");
+            if (DEBUG) Log.d(TAG, "CALL: onFinishCandidatesView");
             onFinishCandidatesView(true);
         }
         mInputViewStarted = false;
         mCandidatesViewStarted = false;
         if (mInputStarted) {
-            if (DEBUG) Log.v(TAG, "CALL: onFinishInput");
+            if (DEBUG) Log.d(TAG, "CALL: onFinishInput");
             onFinishInput();
         }
         mInputStarted = false;
@@ -1599,16 +1610,16 @@ public class InputMethodService extends AbstractInputMethodService {
         mStartedInputConnection = ic;
         mInputEditorInfo = attribute;
         initialize();
-        if (DEBUG) Log.v(TAG, "CALL: onStartInput");
+        if (DEBUG) Log.d(TAG, "CALL: onStartInput");
         onStartInput(attribute, restarting);
         if (mWindowVisible) {
             if (mShowInputRequested) {
-                if (DEBUG) Log.v(TAG, "CALL: onStartInputView");
+                if (DEBUG) Log.d(TAG, "CALL: onStartInputView");
                 mInputViewStarted = true;
                 onStartInputView(mInputEditorInfo, restarting);
                 startExtractingText(true);
             } else if (mCandidatesVisibility == View.VISIBLE) {
-                if (DEBUG) Log.v(TAG, "CALL: onStartCandidatesView");
+                if (DEBUG) Log.d(TAG, "CALL: onStartCandidatesView");
                 mCandidatesViewStarted = true;
                 onStartCandidatesView(mInputEditorInfo, restarting);
             }
@@ -1740,6 +1751,9 @@ public class InputMethodService extends AbstractInputMethodService {
      * InputMethodManager.HIDE_IMPLICIT_ONLY} bit set.
      */
     public void requestHideSelf(int flags) {
+       if (DEBUG) Log.d(TAG, "requestHideSelf, flags=" + flags
+                        + " calling input method editor" 
+                        + " hideSoftInputFromInputMethod");
        mImm.hideSoftInputFromInputMethod(mToken, flags);
     }
     
@@ -1765,7 +1779,10 @@ public class InputMethodService extends AbstractInputMethodService {
             }
             // If the soft input area is shown, back closes it and we
             // consume the back key.
-            if (doIt) requestHideSelf(0);
+            if (doIt) { 
+               Log.v(TAG, "handleBack, doIt, calling requestHideSelf(0)");
+               requestHideSelf(0);
+            }
             return true;
         } else if (mWindowVisible) {
             if (mCandidatesVisibility == View.VISIBLE) {
@@ -1798,10 +1815,13 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            Log.v(TAG, "onKeyDown(): KEYCODE_BACK");
             if (handleBack(false)) {
+                if (DEBUG) Log.d(TAG, "onKeyDown(): handleBack returned true, start tracking");
                 event.startTracking();
                 return true;
             }
+            Log.v(TAG, "onKeyDown(): KEYCODE_BACK, handleBack returned false");
             return false;
         }
         return doMovementKey(keyCode, event, MOVEMENT_DOWN);
@@ -1847,6 +1867,7 @@ public class InputMethodService extends AbstractInputMethodService {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.isTracking()
                 && !event.isCanceled()) {
+            if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK, tracking, not cancelled, calling handleBack w/ true");
             return handleBack(true);
         }
         
@@ -1862,7 +1883,7 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     @Override
     public boolean onTrackballEvent(MotionEvent event) {
-        if (DEBUG) Log.v(TAG, "onTrackballEvent: " + event);
+        if (DEBUG) Log.d(TAG, "onTrackballEvent: " + event);
         return false;
     }
 
@@ -1875,7 +1896,7 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
-        if (DEBUG) Log.v(TAG, "onGenericMotionEvent(): event " + event);
+        if (DEBUG) Log.d(TAG, "onGenericMotionEvent(): event " + event);
         return false;
     }
 
@@ -1886,7 +1907,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * Handle a request by the system to toggle the soft input area.
      */
     private void onToggleSoftInput(int showFlags, int hideFlags) {
-        if (DEBUG) Log.v(TAG, "toggleSoftInput()");
+        if (DEBUG) Log.d(TAG, "toggleSoftInput()");
         if (isInputViewShown()) {
             requestHideSelf(hideFlags);
         } else {
@@ -2348,7 +2369,7 @@ public class InputMethodService extends AbstractInputMethodService {
                 + (nameResId == 0 ? "<none>" : getString(nameResId)) + ","
                 + mode + ","
                 + newSubtype.getLocale() + "," + newSubtype.getExtraValue();
-            Log.v(TAG, "--- " + output);
+            Log.d(TAG, "--- " + output);
         }
     }
 

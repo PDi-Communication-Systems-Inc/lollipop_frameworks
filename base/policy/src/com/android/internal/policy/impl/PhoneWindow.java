@@ -1776,10 +1776,12 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             }
 
             case KeyEvent.KEYCODE_BACK: {
+		Log.v(TAG, "onKeyDown(): KEYCODE_BACK");
                 if (event.getRepeatCount() > 0) break;
                 if (featureId < 0) break;
                 // Currently don't do anything with long press.
                 if (dispatcher != null) {
+		    Log.v(TAG, "onKeyDown(): dispatching KEYCODE_BACK");
                     dispatcher.startTracking(event, this);
                 }
                 return true;
@@ -1871,20 +1873,26 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             }
 
             case KeyEvent.KEYCODE_BACK: {
+ 		Log.v(TAG, "onKeyUp(): KEYCODE_BACK");
                 if (featureId < 0) break;
                 if (event.isTracking() && !event.isCanceled()) {
+                    Log.v(TAG, "onKeyUp(): KEYCODE_BACK tracking, but not cancelled");
                     if (featureId == FEATURE_OPTIONS_PANEL) {
+                        Log.v(TAG, "onKeyUp(): KEYCODE_BACK, feature options panel triggered");
                         PanelFeatureState st = getPanelState(featureId, false);
                         if (st != null && st.isInExpandedMode) {
+                            Log.v(TAG, "onKeyUp(): KEYCODE_BACK, going from expanded menu back to icon menu");
                             // If the user is in an expanded menu and hits back, it
                             // should go back to the icon menu
                             reopenMenu(true);
                             return true;
                         }
                     }
+                    Log.v(TAG, "onKeyUp(): KEYCODE_BACK, closing panel");
                     closePanel(featureId);
                     return true;
                 }
+                Log.v(TAG, "onKeyUp(): KEYCODE_BACK, not tracking and/or cancelled");
                 break;
             }
 

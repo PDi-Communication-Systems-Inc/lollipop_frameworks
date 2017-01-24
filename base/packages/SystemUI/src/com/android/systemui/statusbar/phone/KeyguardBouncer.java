@@ -28,6 +28,7 @@ import com.android.keyguard.KeyguardViewBase;
 import com.android.keyguard.R;
 import com.android.keyguard.ViewMediatorCallback;
 import com.android.systemui.keyguard.KeyguardViewMediator;
+import android.util.Slog;
 
 import static com.android.keyguard.KeyguardHostView.OnDismissAction;
 import static com.android.keyguard.KeyguardSecurityModel.SecurityMode;
@@ -46,6 +47,7 @@ public class KeyguardBouncer {
     private ViewGroup mRoot;
     private boolean mShowingSoon;
     private Choreographer mChoreographer = Choreographer.getInstance();
+    private static String TAG = "KeyguardBouncer";
 
     public KeyguardBouncer(Context context, ViewMediatorCallback callback,
             LockPatternUtils lockPatternUtils, StatusBarWindowManager windowManager,
@@ -180,7 +182,9 @@ public class KeyguardBouncer {
     }
 
     public boolean onBackPressed() {
-        return mKeyguardView != null && mKeyguardView.handleBackKey();
+        boolean resBackKey = (mKeyguardView != null && mKeyguardView.handleBackKey());
+        Slog.v(TAG, "onBackPressed(): returning" + resBackKey);
+        return resBackKey;
     }
 
     /**
