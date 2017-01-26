@@ -132,6 +132,8 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
     private static final Transition USE_DEFAULT_TRANSITION = new TransitionSet();
 
+    private static boolean DEBUG = false;
+
     /**
      * Simple callback used by the context menu and its submenus. The options
      * menu submenus do not use this (their behavior is more complex).
@@ -1776,16 +1778,16 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             }
 
             case KeyEvent.KEYCODE_BACK: {
-		Log.d(TAG, "onKeyDown(): KEYCODE_BACK");
+		if (DEBUG) Log.d(TAG, "onKeyDown(): KEYCODE_BACK");
                 if (event.getRepeatCount() > 0) break;
                 if (featureId < 0) break;
                 // Currently don't do anything with long press.
                 if (dispatcher != null) {
-		    Log.d(TAG, "onKeyDown(): dispatching KEYCODE_BACK");
+		    if (DEBUG) Log.d(TAG, "onKeyDown(): dispatching KEYCODE_BACK");
                     dispatcher.startTracking(event, this);
                 }
  		else {
-		   Log.d(TAG, "onKeyDown(): no dispatcher, returning as handled");
+		   if (DEBUG) Log.d(TAG, "onKeyDown(): no dispatcher, returning as handled");
                 }
                 return true;
             }
@@ -1876,26 +1878,26 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             }
 
             case KeyEvent.KEYCODE_BACK: {
- 		Log.v(TAG, "onKeyUp(): KEYCODE_BACK");
+ 		if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK");
                 if (featureId < 0) break;
                 if (event.isTracking() && !event.isCanceled()) {
-                    Log.v(TAG, "onKeyUp(): KEYCODE_BACK tracking, but not cancelled");
+                    if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK tracking, but not cancelled");
                     if (featureId == FEATURE_OPTIONS_PANEL) {
-                        Log.v(TAG, "onKeyUp(): KEYCODE_BACK, feature options panel triggered");
+                        if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK, feature options panel triggered");
                         PanelFeatureState st = getPanelState(featureId, false);
                         if (st != null && st.isInExpandedMode) {
-                            Log.v(TAG, "onKeyUp(): KEYCODE_BACK, going from expanded menu back to icon menu");
+                            if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK, going from expanded menu back to icon menu");
                             // If the user is in an expanded menu and hits back, it
                             // should go back to the icon menu
                             reopenMenu(true);
                             return true;
                         }
                     }
-                    Log.v(TAG, "onKeyUp(): KEYCODE_BACK, closing panel");
+                    if (DEBUG) Log.d(TAG, "onKeyUp(): KEYCODE_BACK, closing panel");
                     closePanel(featureId);
                     return true;
                 }
-                Log.v(TAG, "onKeyUp(): KEYCODE_BACK, not tracking and/or cancelled");
+                if (DEBUG) Log.v(TAG, "onKeyUp(): KEYCODE_BACK, not tracking and/or cancelled");
                 break;
             }
 
@@ -2304,7 +2306,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
         public boolean superDispatchKeyEvent(KeyEvent event) {
             // Give priority to closing action modes if applicable.
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-		Log.d(TAG, "superDispatchKeyEvent(): KEYCODE_BACK");
+		if (DEBUG) Log.d(TAG, "superDispatchKeyEvent(): KEYCODE_BACK");
                 final int action = event.getAction();
                 // Back cancels action modes first.
                 if (mActionMode != null) {

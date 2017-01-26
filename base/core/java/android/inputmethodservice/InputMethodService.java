@@ -1815,13 +1815,13 @@ public class InputMethodService extends AbstractInputMethodService {
      */
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            Log.v(TAG, "onKeyDown(): KEYCODE_BACK");
+            if (DEBUG) Log.d(TAG, "onKeyDown(): KEYCODE_BACK");
             if (handleBack(false)) {
                 if (DEBUG) Log.d(TAG, "onKeyDown(): handleBack returned true, start tracking");
                 event.startTracking();
                 return true;
             }
-            Log.v(TAG, "onKeyDown(): KEYCODE_BACK, handleBack returned false");
+            if (DEBUG) Log.v(TAG, "onKeyDown(): KEYCODE_BACK, handleBack returned false");
             return false;
         }
         return doMovementKey(keyCode, event, MOVEMENT_DOWN);
