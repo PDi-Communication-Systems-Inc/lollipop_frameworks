@@ -109,7 +109,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         RecentsComponent.Callbacks, ExpandableNotificationRow.ExpansionLogger,
         NotificationData.Environment {
     public static final String TAG = "StatusBar";
-    public static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
+    public static final boolean DEBUG = true;
     public static final boolean MULTIUSER_DEBUG = false;
 
     protected static final int MSG_SHOW_RECENT_APPS = 1019;

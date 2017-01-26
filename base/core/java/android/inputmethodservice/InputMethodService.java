@@ -404,8 +404,8 @@ public class InputMethodService extends AbstractInputMethodService {
             if (DEBUG) Log.v(TAG, "hideSoftInput()");
             boolean wasVis = isInputViewShown();
             mShowInputFlags = 0;
-            mShowInputRequested = true;
-            mShowInputForced = true;
+            mShowInputRequested = false;
+            mShowInputForced = false;
             doHideWindow();
             if (resultReceiver != null) {
                 resultReceiver.send(wasVis != isInputViewShown()
@@ -702,8 +702,8 @@ public class InputMethodService extends AbstractInputMethodService {
     void initViews() {
         mInitialized = false;
         mWindowCreated = false;
-        mShowInputRequested = true;
-        mShowInputForced = true;
+        mShowInputRequested = false;
+        mShowInputForced = false;
         
         mThemeAttrs = obtainStyledAttributes(android.R.styleable.InputMethodService);
         mRootView = mInflater.inflate(

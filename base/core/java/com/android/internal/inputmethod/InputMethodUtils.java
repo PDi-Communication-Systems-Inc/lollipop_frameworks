@@ -43,7 +43,7 @@ import java.util.Locale;
  * This methods are supposed to be used in both the framework and the Settings application.
  */
 public class InputMethodUtils {
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     public static final int NOT_A_SUBTYPE_ID = -1;
     public static final String SUBTYPE_MODE_ANY = null;
     public static final String SUBTYPE_MODE_KEYBOARD = "keyboard";

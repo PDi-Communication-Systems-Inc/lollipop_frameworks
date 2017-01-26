@@ -1776,13 +1776,16 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             }
 
             case KeyEvent.KEYCODE_BACK: {
-		Log.v(TAG, "onKeyDown(): KEYCODE_BACK");
+		Log.d(TAG, "onKeyDown(): KEYCODE_BACK");
                 if (event.getRepeatCount() > 0) break;
                 if (featureId < 0) break;
                 // Currently don't do anything with long press.
                 if (dispatcher != null) {
-		    Log.v(TAG, "onKeyDown(): dispatching KEYCODE_BACK");
+		    Log.d(TAG, "onKeyDown(): dispatching KEYCODE_BACK");
                     dispatcher.startTracking(event, this);
+                }
+ 		else {
+		   Log.d(TAG, "onKeyDown(): no dispatcher, returning as handled");
                 }
                 return true;
             }
@@ -2301,6 +2304,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
         public boolean superDispatchKeyEvent(KeyEvent event) {
             // Give priority to closing action modes if applicable.
             if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+		Log.d(TAG, "superDispatchKeyEvent(): KEYCODE_BACK");
                 final int action = event.getAction();
                 // Back cancels action modes first.
                 if (mActionMode != null) {

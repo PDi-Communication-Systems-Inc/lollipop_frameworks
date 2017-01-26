@@ -2364,10 +2364,12 @@ public class Activity extends ContextThemeWrapper
      */
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    Slog.d(TAG, "onKeyDown(): KEYCODE_BACK");
             if (getApplicationInfo().targetSdkVersion
                     >= Build.VERSION_CODES.ECLAIR) {
                 event.startTracking();
             } else {
+                Slog.d(TAG, "onKeyDown(): calling onBackPressed");
                 onBackPressed();
             }
             return true;
@@ -2450,6 +2452,7 @@ public class Activity extends ContextThemeWrapper
                 >= Build.VERSION_CODES.ECLAIR) {
             if (keyCode == KeyEvent.KEYCODE_BACK && event.isTracking()
                     && !event.isCanceled()) {
+		Slog.d(TAG, "onKeyUp(): KEYCODE_BACK, event is tracking, not cancelled");
                 onBackPressed();
                 return true;
             }

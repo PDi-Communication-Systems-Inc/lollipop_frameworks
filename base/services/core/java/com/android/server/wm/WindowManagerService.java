@@ -161,7 +161,7 @@ import java.util.List;
 public class WindowManagerService extends IWindowManager.Stub
         implements Watchdog.Monitor, WindowManagerPolicy.WindowManagerFuncs {
     static final String TAG = "WindowManager";
-    static final boolean DEBUG = false;
+    static final boolean DEBUG = true;
     static final boolean DEBUG_ADD_REMOVE = false;
     static final boolean DEBUG_FOCUS = false;
     static final boolean DEBUG_FOCUS_LIGHT = DEBUG_FOCUS || false;
@@ -169,8 +169,8 @@ public class WindowManagerService extends IWindowManager.Stub
     static final boolean DEBUG_LAYOUT = false;
     static final boolean DEBUG_RESIZE = false;
     static final boolean DEBUG_LAYERS = false;
-    static final boolean DEBUG_INPUT = false;
-    static final boolean DEBUG_INPUT_METHOD = false;
+    static final boolean DEBUG_INPUT = true;
+    static final boolean DEBUG_INPUT_METHOD = true;
     static final boolean DEBUG_VISIBILITY = false;
     static final boolean DEBUG_WINDOW_MOVEMENT = false;
     static final boolean DEBUG_TOKEN_MOVEMENT = false;
@@ -189,8 +189,8 @@ public class WindowManagerService extends IWindowManager.Stub
     static final boolean DEBUG_LAYOUT_REPEATS = true;
     static final boolean DEBUG_SURFACE_TRACE = false;
     static final boolean DEBUG_WINDOW_TRACE = false;
-    static final boolean DEBUG_TASK_MOVEMENT = false;
-    static final boolean DEBUG_STACK = false;
+    static final boolean DEBUG_TASK_MOVEMENT = true;
+    static final boolean DEBUG_STACK = true;
     static final boolean DEBUG_DISPLAY = false;
     static final boolean SHOW_SURFACE_ALLOC = false;
     static final boolean SHOW_TRANSACTIONS = false;

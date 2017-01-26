@@ -52,7 +52,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class NavigationBarView extends LinearLayout {
-    final static boolean DEBUG = false;
+    final static boolean DEBUG = true;
     final static String TAG = "PhoneStatusBar/NavigationBarView";
 
     // slippery nav bar when everything is disabled, e.g. during setup
@@ -138,6 +138,7 @@ public class NavigationBarView extends LinearLayout {
     private final OnClickListener mImeSwitcherClickListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
+	    Log.v(TAG, "onClick(): called, calling IME system service show input method picker");
             ((InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE))
                     .showInputMethodPicker();
         }

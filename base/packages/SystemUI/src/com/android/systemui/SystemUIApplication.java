@@ -34,7 +34,7 @@ import java.util.Map;
 public class SystemUIApplication extends Application {
 
     private static final String TAG = "SystemUIService";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     /**
      * The classes of the stuff to start.

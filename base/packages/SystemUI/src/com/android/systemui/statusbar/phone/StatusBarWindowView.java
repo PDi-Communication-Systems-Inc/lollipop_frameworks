@@ -121,14 +121,15 @@ public class StatusBarWindowView extends FrameLayout {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
+        Slog.d(TAG, "dispatchKeyEvent(): keycode="+event.getKeyCode());
         switch (event.getKeyCode()) {
             case KeyEvent.KEYCODE_BACK:
-                Slog.v(TAG, "dispatchKeyEvent(): KEYCODE_BACK");
+                Slog.d(TAG, "dispatchKeyEvent(): KEYCODE_BACK");
                 if (!down) {
-		    Slog.v(TAG, "dispatchKeyEvent(): onBackPressed, calling service onBackPressed");
+		    Slog.d(TAG, "dispatchKeyEvent(): onBackPressed, calling service onBackPressed");
                     mService.onBackPressed();
                 }
-                Slog.v(TAG, "dispatchKeyEvent(): KEYCODE_BACK, down action on KEYCODE_BACK still");
+                Slog.d(TAG, "dispatchKeyEvent(): KEYCODE_BACK, down action on KEYCODE_BACK still");
                 return true;
             case KeyEvent.KEYCODE_MENU:
                 if (!down) {
