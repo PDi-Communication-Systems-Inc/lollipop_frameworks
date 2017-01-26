@@ -52,7 +52,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class NavigationBarView extends LinearLayout {
-    final static boolean DEBUG = true;
+    final static boolean DEBUG = false; 
     final static String TAG = "PhoneStatusBar/NavigationBarView";
 
     // slippery nav bar when everything is disabled, e.g. during setup

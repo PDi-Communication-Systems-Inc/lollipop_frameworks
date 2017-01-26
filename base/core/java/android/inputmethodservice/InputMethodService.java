@@ -222,7 +222,7 @@ import java.io.PrintWriter;
  */
 public class InputMethodService extends AbstractInputMethodService {
     static final String TAG = "InputMethodService";
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
 
     /**
      * The back button will close the input window.

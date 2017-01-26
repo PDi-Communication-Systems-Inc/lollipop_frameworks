@@ -132,7 +132,7 @@ import java.util.Locale;
  */
 public class InputMethodManagerService extends IInputMethodManager.Stub
         implements ServiceConnection, Handler.Callback {
-    static final boolean DEBUG = true;
+    static final boolean DEBUG = false;
     static final String TAG = "InputMethodManagerService";
 
     static final int MSG_SHOW_IM_PICKER = 1;

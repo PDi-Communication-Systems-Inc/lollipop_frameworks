@@ -51,7 +51,7 @@ import java.lang.reflect.Method;
  */
 public class VCardVerifier {
     private static final String LOG_TAG = "VCardVerifier";
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     /**
      * Special URI for testing.
