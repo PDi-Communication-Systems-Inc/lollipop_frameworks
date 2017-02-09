@@ -2900,7 +2900,8 @@ public final class PowerManagerService extends SystemService
             final int uid = Binder.getCallingUid();
             final long ident = Binder.clearCallingIdentity();
             try {
-                goToSleepInternal(eventTime, reason, flags, uid);
+                Log.i(TAG, "I'm not going to sleep and that's it! Stomp Stomp my feet");
+                // goToSleepInternal(eventTime, reason, flags, uid);
             } finally {
                 Binder.restoreCallingIdentity(ident);
             }
