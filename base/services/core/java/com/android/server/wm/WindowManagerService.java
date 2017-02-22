@@ -552,7 +552,7 @@ public class WindowManagerService extends IWindowManager.Stub
     final ArrayList<WindowState> mInputMethodDialogs = new ArrayList<WindowState>();
 
     boolean mHardKeyboardAvailable;
-    boolean mShowImeWithHardKeyboard;
+    boolean mShowImeWithHardKeyboard = true;
     OnHardKeyboardStatusChangeListener mHardKeyboardStatusChangeListener;
     SettingsObserver mSettingsObserver;
 

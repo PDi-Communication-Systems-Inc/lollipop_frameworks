@@ -396,7 +396,7 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
     private InputMethodInfo[] mIms;
     private int[] mSubtypeIds;
     private Locale mLastSystemLocale;
-    private boolean mShowImeWithHardKeyboard;
+    private boolean mShowImeWithHardKeyboard = true;
     private final MyPackageMonitor mMyPackageMonitor = new MyPackageMonitor();
     private final IPackageManager mIPackageManager;
 
@@ -707,6 +707,12 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
         // mSettings should be created before buildInputMethodListLocked
         mSettings = new InputMethodSettings(
                 mRes, context.getContentResolver(), mMethodMap, mMethodList, userId);
+
+
+	// Try to force always showing ime w/ physical keyboard -- PDi mrobbeloth
+	mSettings.setShowImeWithHardKeyboard(true);
+
+
         updateCurrentProfileIds();
         mFileManager = new InputMethodFileManager(mMethodMap, userId);
         synchronized (mMethodMap) {
@@ -1734,7 +1740,8 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
     }
 
     public void updateKeyboardFromSettingsLocked() {
-        mShowImeWithHardKeyboard = mSettings.isShowImeWithHardKeyboardEnabled();
+	mShowImeWithHardKeyboard = true;
+        // mShowImeWithHardKeyboard = mSettings.isShowImeWithHardKeyboardEnabled();
         if (mSwitchingDialog != null
                 && mSwitchingDialogTitleView != null
                 && mSwitchingDialog.isShowing()) {
@@ -2866,11 +2873,13 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
                             ? View.VISIBLE : View.GONE);
             final Switch hardKeySwitch = (Switch)mSwitchingDialogTitleView.findViewById(
                     com.android.internal.R.id.hard_keyboard_switch);
-            hardKeySwitch.setChecked(mShowImeWithHardKeyboard);
+            hardKeySwitch.setEnabled(false);
+            hardKeySwitch.setChecked(true);
             hardKeySwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mSettings.setShowImeWithHardKeyboard(isChecked);
+		      mSettings.setShowImeWithHardKeyboard(true);
+                    //mSettings.setShowImeWithHardKeyboard(isChecked);
                     // Ensure that the input method dialog is dismissed when changing
                     // the hardware keyboard state.
                     hideInputMethodMenu();

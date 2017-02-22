@@ -401,7 +401,7 @@ public class InputMethodService extends AbstractInputMethodService {
          * Handle a request by the system to hide the soft input area.
          */
         public void hideSoftInput(int flags, ResultReceiver resultReceiver) {
-            if (DEBUG) Log.v(TAG, "hideSoftInput()");
+            if (DEBUG) Log.v(TAG, "hideSoftInput(): called");
             boolean wasVis = isInputViewShown();
             mShowInputFlags = 0;
             mShowInputRequested = false;
@@ -419,17 +419,24 @@ public class InputMethodService extends AbstractInputMethodService {
          * Handle a request by the system to show the soft input area.
          */
         public void showSoftInput(int flags, ResultReceiver resultReceiver) {
-            if (DEBUG) Log.v(TAG, "showSoftInput()");
+            if (DEBUG) Log.d(TAG, "showSoftInput(): called");
             boolean wasVis = isInputViewShown();
             mShowInputFlags = 0;
+	    if (DEBUG) Log.d(TAG,"showSoftInput(): calling onShowInputRequested()");
+            if (DEBUG) Log.d(TAG,"showSoftInput(): flags="+flags);
             if (onShowInputRequested(flags, false)) {
+                if (DEBUG) Log.d(TAG, "showSoftInput(): onShowInputRequested() returned true");
                 try {
+		    if (DEBUG) Log.d(TAG, "showSoftInput(): Calling showWindow():");
                     showWindow(true);
                 } catch (BadTokenException e) {
                     if (DEBUG) Log.v(TAG, "BadTokenException: IME is done.");
                     mWindowVisible = false;
                     mWindowAdded = false;
                 }
+            }
+            else {
+               if (DEBUG) Log.d(TAG, "showSoftInput(): onShowInputRequested() returned false");
             }
             // If user uses hard keyboard, IME button should always be shown.
             boolean showing = isInputViewShown();
@@ -1096,18 +1103,29 @@ public class InputMethodService extends AbstractInputMethodService {
      * is currently shown.
      */
     public void updateInputViewShown() {
+	if (DEBUG) Log.d(TAG, "updateInputViewShown(): called");
         boolean isShown = mShowInputRequested && onEvaluateInputViewShown();
         if (mIsInputViewShown != isShown && mWindowVisible) {
             mIsInputViewShown = isShown;
+            if (DEBUG) Log.d(TAG, "updateInputViewShown(): setting input visibility to " + 
+                             (isShown ? "visible" : "gone"));
             mInputFrame.setVisibility(isShown ? View.VISIBLE : View.GONE);
             if (mInputView == null) {
+	        if (DEBUG) Log.d(TAG, "updateInputViewShown(): call initialize");
                 initialize();
+		if (DEBUG) Log.d(TAG, "updateInputViewShown(): call onCreateInputView");
                 View v = onCreateInputView();
-                if (v != null) {
-                    setInputView(v);
-                }
+                setInputView(v);
+            }
+	    else {
+	       if (DEBUG) Log.d(TAG, "updateInputViewShown(): input view not null");
+ 	       setInputView(mInputView);
             }
         }
+	else {
+	   if (DEBUG) Log.d(TAG, "updateInputViewShown(): mIsInputViewShown is same as" + 
+                            " isShown and mWindowVisible");
+	}
     }
     
     /**
@@ -1140,7 +1158,7 @@ public class InputMethodService extends AbstractInputMethodService {
         boolean viewShownResult = (config.keyboard == Configuration.KEYBOARD_NOKEYS)  
                                   || (config.hardKeyboardHidden == Configuration.HARDKEYBOARDHIDDEN_YES);
         if (DEBUG) Log.d(TAG, "onEvaluateInputViewShown(): viewShownResult="+viewShownResult);
-        return viewShownResult;
+	return viewShownResult;
     }
     
     /**
@@ -1180,15 +1198,18 @@ public class InputMethodService extends AbstractInputMethodService {
      * the resize takes place.
      */
     public int getCandidatesHiddenVisibility() {
+        if (DEBUG) Log.d(TAG, "getCandidatesHiddenVisibility(): called");
         return isExtractViewShown() ? View.GONE : View.INVISIBLE;
     }
     
     public void showStatusIcon(int iconResId) {
+         if (DEBUG) Log.d(TAG, "showStatusIcon(): called");
         mStatusIcon = iconResId;
         mImm.showStatusIcon(mToken, getPackageName(), iconResId);
     }
     
     public void hideStatusIcon() {
+         if (DEBUG) Log.d(TAG, "hideStatusIcon(): called");
         mStatusIcon = 0;
         mImm.hideStatusIcon(mToken);
     }
@@ -1201,10 +1222,12 @@ public class InputMethodService extends AbstractInputMethodService {
      * @param id Unique identifier of the new input method ot start.
      */
     public void switchInputMethod(String id) {
+        if (DEBUG) Log.d(TAG, "switchInputMethod(): called id=" + id);
         mImm.setInputMethod(mToken, id);
     }
     
     public void setExtractView(View view) {
+        if (DEBUG) Log.d(TAG, "setExtractView: called view=" + view);
         mExtractFrame.removeAllViews();
         mExtractFrame.addView(view, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1235,6 +1258,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * first needed by the input method.
      */
     public void setCandidatesView(View view) {
+        if (DEBUG) Log.d(TAG, "setCandidatesView(): called view=" + view);
         mCandidatesFrame.removeAllViews();
         mCandidatesFrame.addView(view, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1248,6 +1272,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * first needed by the input method.
      */
     public void setInputView(View view) {
+         if (DEBUG) Log.d(TAG, "setInputView(): called view=" + view);
         mInputFrame.removeAllViews();
         mInputFrame.addView(view, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1262,6 +1287,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * {@link android.R.id#inputExtractEditText}.
      */
     public View onCreateExtractTextView() {
+        if (DEBUG) Log.d(TAG, "onCreateExtractTextView(): called");
         return mInflater.inflate(
                 com.android.internal.R.layout.input_method_extract_view, null);
     }
@@ -1277,6 +1303,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * function, use {@link #setCandidatesView(View)}.
      */
     public View onCreateCandidatesView() {
+        if (DEBUG) Log.d(TAG, "onCreateCandidatesView(): called, returning null");
         return null;
     }
     
@@ -1292,6 +1319,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * function, use {@link #setInputView(View)}.
      */
     public View onCreateInputView() {
+        if (DEBUG) Log.d(TAG, "onCreateInputView(): called, returning null");
         return null;
     }
     
@@ -1307,6 +1335,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * same text field as before.
      */
     public void onStartInputView(EditorInfo info, boolean restarting) {
+        if (DEBUG) Log.d(TAG, "onStartInputView(): called, empty");
         // Intentionally empty
     }
     
@@ -1324,6 +1353,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * called immediately after.
      */
     public void onFinishInputView(boolean finishingInput) {
+        if (DEBUG) Log.d(TAG, "onFinishInputView(): called, check if not done finishing input");
         if (!finishingInput) {
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
@@ -1352,6 +1382,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * same text field as before.
      */
     public void onStartCandidatesView(EditorInfo info, boolean restarting) {
+        if (DEBUG) Log.d(TAG, "onStartCandidatesView(): called, empty");
         // Intentionally empty
     }
     
@@ -1369,6 +1400,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * called immediately after.
      */
     public void onFinishCandidatesView(boolean finishingInput) {
+	if (DEBUG) Log.d(TAG, "onFinishCandidatesView(): called, checking if not done finishing input");
         if (!finishingInput) {
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
@@ -1393,10 +1425,12 @@ public class InputMethodService extends AbstractInputMethodService {
      * @return Returns true to indicate that the window should be shown.
      */
     public boolean onShowInputRequested(int flags, boolean configChange) {
+        if (DEBUG) Log.d(TAG, "onshowInputRequested(): called");
         if (!onEvaluateInputViewShown()) {
             return false;
         }
         if ((flags&InputMethod.SHOW_EXPLICIT) == 0) {
+            if (DEBUG) Log.d(TAG, "onShowInputRequsted(): Show explicit flag");
             if (!configChange && onEvaluateFullscreenMode()) {
                 // Don't show if this is not explicitly requested by the user and
                 // the input method is fullscreen.  That would be too disruptive.
@@ -1410,17 +1444,22 @@ public class InputMethodService extends AbstractInputMethodService {
                 // And if the device has a hard keyboard, even if it is
                 // currently hidden, don't show the input method implicitly.
                 // These kinds of devices don't need it that much.
+                if (DEBUG) Log.d(TAG, "onShowInputRequested(): keyboard config does not equal KEYBOARD_NOKEYS");
                 return false;
             }
         }
+
         if ((flags&InputMethod.SHOW_FORCED) != 0) {
+            if (DEBUG) Log.d(TAG, "onShowInputRequested(): forced input flag set");
             mShowInputForced = true;
         }
+
+        if (DEBUG) Log.d(TAG, "onShowInputRequested(): End of method reached, returning true, show window");
         return true;
     }
     
     public void showWindow(boolean showInput) {
-        if (DEBUG) Log.d(TAG, "Showing window: showInput=" + showInput
+        if (DEBUG) Log.d(TAG, "showWindow(): Showing window: showInput=" + showInput
                 + " mShowInputRequested=" + mShowInputRequested
                 + " mWindowAdded=" + mWindowAdded
                 + " mWindowCreated=" + mWindowCreated
@@ -1443,6 +1482,7 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     void showWindowInner(boolean showInput) {
+        if (DEBUG) Log.d(TAG, "showWindowInner(): called");
         boolean doShowInput = false;
         boolean wasVisible = mWindowVisible;
         mWindowVisible = true;
@@ -1454,43 +1494,52 @@ public class InputMethodService extends AbstractInputMethodService {
                 }
             }
         } else {
+	    if (DEBUG) Log.d(TAG, "showWindowInner(): mshowInputRequested");
             showInput = true;
         }
 
-        if (DEBUG) Log.d(TAG, "showWindow: updating UI");
+        if (DEBUG) Log.d(TAG, "showWindowInner(): updating UI, calling initialize");
         initialize();
+        if (DEBUG) Log.d(TAG, "showWindowInner(): calling updateFullscreenMode");
         updateFullscreenMode();
+        if (DEBUG) Log.d(TAG, "showWindowInner(): calling updateInputViewShown");
         updateInputViewShown();
         
+        if (DEBUG) Log.d(TAG, "showWindowInner(): checking for window not added"
+                              + " or created");
         if (!mWindowAdded || !mWindowCreated) {
             mWindowAdded = true;
             mWindowCreated = true;
             initialize();
-            if (DEBUG) Log.d(TAG, "CALL: onCreateCandidatesView");
+            if (DEBUG) Log.d(TAG, "showWindowInner(): CALL: onCreateCandidatesView");
             View v = onCreateCandidatesView();
-            if (DEBUG) Log.d(TAG, "showWindow: candidates=" + v);
+            if (DEBUG) Log.d(TAG, "showWindowInner(): candidates=" + v);
             if (v != null) {
                 setCandidatesView(v);
             }
         }
+ 
+        if (DEBUG) Log.d(TAG, "showWindowInner(): checking for manually set showInputRequested");
         if (mShowInputRequested) {
             if (!mInputViewStarted) {
-                if (DEBUG) Log.d(TAG, "CALL: onStartInputView");
+                if (DEBUG) Log.d(TAG, "showWindowInner(): CALL: onStartInputView");
                 mInputViewStarted = true;
                 onStartInputView(mInputEditorInfo, false);
             }
         } else if (!mCandidatesViewStarted) {
-            if (DEBUG) Log.d(TAG, "CALL: onStartCandidatesView");
+            if (DEBUG) Log.d(TAG, "showWindowInner(): CALL: onStartCandidatesView");
             mCandidatesViewStarted = true;
             onStartCandidatesView(mInputEditorInfo, false);
         }
         
+        if (DEBUG) Log.d(TAG, "showWindowInner(): checking if we do show the input"); 
         if (doShowInput) {
             startExtractingText(false);
         }
 
+        if (DEBUG) Log.d(TAG, "showWindowInner(): checking to see if view was not visible");
         if (!wasVisible) {
-            if (DEBUG) Log.d(TAG, "showWindow: showing!");
+            if (DEBUG) Log.d(TAG, "showWindowInner(): showing!");
             mImm.setImeWindowStatus(mToken, IME_ACTIVE, mBackDisposition);
             onWindowShown();
             mWindow.show();
@@ -1498,6 +1547,7 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     private void finishViews() {
+        if (DEBUG) Log.d(TAG, "finishViews(): called");
         if (mInputViewStarted) {
             if (DEBUG) Log.d(TAG, "CALL: onFinishInputView");
             onFinishInputView(false);
@@ -1535,6 +1585,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * for the window has occurred (creating its views etc).
      */
     public void onWindowShown() {
+        if (DEBUG) Log.d(TAG, "onWindowShown(): called, empty");
         // Intentionally empty
     }
     
@@ -1543,6 +1594,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * after previously being visible.
      */
     public void onWindowHidden() {
+        if (DEBUG) Log.d(TAG, "onWindowHidden(): called, empty");
         // Intentionally empty
     }
     
@@ -1554,6 +1606,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * and {@link #getCurrentInputConnection} return valid objects.
      */
     public void onBindInput() {
+        if (DEBUG) Log.d(TAG, "onBindInput: called, empty");
         // Intentionally empty
     }
     
@@ -1564,6 +1617,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * valid objects.
      */
     public void onUnbindInput() {
+        if (DEBUG) Log.d(TAG, "onUnbindInput: called, empty");
         // Intentionally empty
     }
     
@@ -1580,10 +1634,12 @@ public class InputMethodService extends AbstractInputMethodService {
      * session with the editor.
      */
     public void onStartInput(EditorInfo attribute, boolean restarting) {
+        if (DEBUG) Log.d(TAG, "onStartInput(): called, empty");
         // Intentionally empty
     }
     
     void doFinishInput() {
+        if (DEBUG) Log.d(TAG, "doFinishInput(): called");
         if (mInputViewStarted) {
             if (DEBUG) Log.d(TAG, "CALL: onFinishInputView");
             onFinishInputView(true);
@@ -1603,6 +1659,7 @@ public class InputMethodService extends AbstractInputMethodService {
     }
 
     void doStartInput(InputConnection ic, EditorInfo attribute, boolean restarting) {
+        if (DEBUG) Log.d(TAG, "doStartInput: called, restarting="+restarting);
         if (!restarting) {
             doFinishInput();
         }
@@ -1639,6 +1696,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * to perform whatever behavior you would like.
      */
     public void onFinishInput() {
+        if (DEBUG) Log.d(TAG, "onFinishInput: called");
         InputConnection ic = getCurrentInputConnection();
         if (ic != null) {
             ic.finishComposingText();
@@ -1655,6 +1713,7 @@ public class InputMethodService extends AbstractInputMethodService {
      * <p>The default implementation here does nothing.
      */
     public void onDisplayCompletions(CompletionInfo[] completions) {
+        if (DEBUG) Log.d(TAG, "onDisplayCompletions: called, empty");
         // Intentionally empty
     }
     
@@ -1765,10 +1824,12 @@ public class InputMethodService extends AbstractInputMethodService {
      * InputMethodManager.} bit set.
      */
     private void requestShowSelf(int flags) {
+        if (DEBUG) Log.d(TAG, "requestShowSelf: called, flags="+flags);
         mImm.showSoftInputFromInputMethod(mToken, flags);
     }
     
     private boolean handleBack(boolean doIt) {
+        if (DEBUG) Log.d(TAG, "handleBack: called, doIt="+doIt);
         if (mShowInputRequested) {
             if (isExtractViewShown() && mExtractView instanceof ExtractEditLayout) {
                 ExtractEditLayout extractEditLayout = (ExtractEditLayout) mExtractView;
