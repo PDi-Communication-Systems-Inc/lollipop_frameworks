@@ -380,4 +380,5 @@
      
     <!-- PDi Button for new user creation -->
     <string name="im_a_new_user">Create Account</string>
+    <string name="pwdEntryHint">Enter Password Here</string>
 </resources>
