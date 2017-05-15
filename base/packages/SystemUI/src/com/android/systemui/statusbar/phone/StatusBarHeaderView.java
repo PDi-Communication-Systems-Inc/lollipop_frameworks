@@ -449,8 +449,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     }
 
     private void startBatteryActivity() {
-        mActivityStarter.startActivity(new Intent(Intent.ACTION_POWER_USAGE_SUMMARY),
-                true /* dismissShade */);
     }
 
     public void setQSPanel(QSPanel qsp) {
