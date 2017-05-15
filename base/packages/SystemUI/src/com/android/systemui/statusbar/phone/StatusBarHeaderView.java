@@ -69,7 +69,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private TextView mDateExpanded;
     private LinearLayout mSystemIcons;
     private View mSignalCluster;
-    private View mSettingsButton;
     private View mQsDetailHeader;
     private TextView mQsDetailHeaderTitle;
     private Switch mQsDetailHeaderSwitch;
@@ -138,8 +137,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mMultiUserAvatar = (ImageView) findViewById(R.id.multi_user_avatar);
         mDateCollapsed = (TextView) findViewById(R.id.date_collapsed);
         mDateExpanded = (TextView) findViewById(R.id.date_expanded);
-        mSettingsButton = findViewById(R.id.settings_button);
-        mSettingsButton.setOnClickListener(this);
         mQsDetailHeader = findViewById(R.id.qs_detail_header);
         mQsDetailHeader.setAlpha(0);
         mQsDetailHeaderTitle = (TextView) mQsDetailHeader.findViewById(android.R.id.title);
@@ -322,7 +319,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mDateCollapsed.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
         mDateExpanded.setVisibility(mExpanded && mAlarmShowing ? View.INVISIBLE : View.VISIBLE);
         mAlarmStatus.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
-        mSettingsButton.setVisibility(mExpanded ? View.VISIBLE : View.INVISIBLE);
         mQsDetailHeader.setVisibility(mExpanded && mShowingDetail? View.VISIBLE : View.INVISIBLE);
         if (mSignalCluster != null) {
             updateSignalClusterDetachment();
@@ -350,9 +346,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
     private void updateSystemIconsLayoutParams() {
         RelativeLayout.LayoutParams lp = (LayoutParams) mSystemIconsSuperContainer.getLayoutParams();
-        int rule = mExpanded
-                ? mSettingsButton.getId()
-                : mMultiUserSwitch.getId();
+        int rule = mMultiUserSwitch.getId();
         if (rule != lp.getRules()[RelativeLayout.START_OF]) {
             lp.addRule(RelativeLayout.START_OF, rule);
             mSystemIconsSuperContainer.setLayoutParams(lp);
@@ -492,9 +486,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if (v == mSettingsButton) {
-            startSettingsActivity();
-        } else if (v == mSystemIconsSuperContainer) {
+        if (v == mSystemIconsSuperContainer) {
             startBatteryActivity();
         } else if (v == mAlarmStatus && mNextAlarm != null) {
             PendingIntent showIntent = mNextAlarm.getShowIntent();
@@ -564,10 +556,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
         target.batteryY = mSystemIconsSuperContainer.getTop() + mSystemIconsContainer.getTop();
         target.batteryLevelAlpha = getAlphaForVisibility(mBatteryLevel);
-        target.settingsAlpha = getAlphaForVisibility(mSettingsButton);
         target.settingsTranslation = mExpanded
                 ? 0
-                : mMultiUserSwitch.getLeft() - mSettingsButton.getLeft();
+                : mMultiUserSwitch.getLeft();
         target.signalClusterAlpha = mSignalClusterDetached ? 0f : 1f;
         target.settingsRotation = !mExpanded ? 90f : 0f;
     }
@@ -619,9 +610,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             mSignalCluster.setTranslationX(0f);
             mSignalCluster.setTranslationY(0f);
         }
-        mSettingsButton.setTranslationY(mSystemIconsSuperContainer.getTranslationY());
-        mSettingsButton.setTranslationX(values.settingsTranslation);
-        mSettingsButton.setRotation(values.settingsRotation);
         applyAlpha(mEmergencyCallsOnly, values.emergencyCallsOnlyAlpha);
         if (!mShowingDetail) {
             // Otherwise it needs to stay invisible
@@ -630,7 +618,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         applyAlpha(mDateCollapsed, values.dateCollapsedAlpha);
         applyAlpha(mDateExpanded, values.dateExpandedAlpha);
         applyAlpha(mBatteryLevel, values.batteryLevelAlpha);
-        applyAlpha(mSettingsButton, values.settingsAlpha);
         applyAlpha(mSignalCluster, values.signalClusterAlpha);
         if (!mExpanded) {
             mTime.setScaleX(1f);
