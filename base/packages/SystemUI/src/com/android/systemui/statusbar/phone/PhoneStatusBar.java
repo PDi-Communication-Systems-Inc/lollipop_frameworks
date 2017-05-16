@@ -343,7 +343,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     ArrayList<Runnable> mPostCollapseRunnables = new ArrayList<>();
 
     // for disabling the status bar
-    int mDisabled = 0;
+    int mDisabled = 1;
 
     // tracking calls to View.setSystemUiVisibility()
     int mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
@@ -1965,7 +1965,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         state = adjustDisableFlags(state);
         final int old = mDisabled;
         final int diff = state ^ old;
-        mDisabled = state;
+        mDisabled = 1;
 
         if (DEBUG) {
             Log.d(TAG, String.format("disable: 0x%08x -> 0x%08x (diff: 0x%08x)",
