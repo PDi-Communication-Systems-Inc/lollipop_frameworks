@@ -334,9 +334,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     }
 
     private void updateAvatarScale() {
-        if (mExpanded) {
-        } else {
-        }
     }
 
     private void updateClockScale() {
