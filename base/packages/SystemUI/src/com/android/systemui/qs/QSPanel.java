@@ -404,7 +404,7 @@ public class QSPanel extends ViewGroup {
             final int ch = record.row == 0 ? mLargeCellHeight : mCellHeight;
             record.tileView.measure(exactly(cw), exactly(ch));
         }
-        int h = rows == 0 ? brightnessHeight : (getRowTop(rows) + mPanelPaddingBottom);
+        int h = getRowTop(rows) + mPanelPaddingBottom;
         if (mFooter.hasFooter()) {
             h += mFooter.getView().getMeasuredHeight();
         }
