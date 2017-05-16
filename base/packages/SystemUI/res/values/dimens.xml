@@ -76,22 +76,22 @@
     <dimen name="status_bar_icon_size">@*android:dimen/status_bar_icon_size</dimen>
 
     <!-- The font size for the clock -->
-    <dimen name="status_bar_clock_size">14sp</dimen>
+    <dimen name="status_bar_clock_size">0sp</dimen>
 
     <!-- Height of a small notification in the status bar -->
-    <dimen name="notification_min_height">64dp</dimen>
+    <dimen name="notification_min_height">0dp</dimen>
 
     <!-- Height of a large notification in the status bar -->
-    <dimen name="notification_max_height">256dp</dimen>
+    <dimen name="notification_max_height">0dp</dimen>
 
     <!-- Height of a medium notification in the status bar -->
-    <dimen name="notification_mid_height">128dp</dimen>
+    <dimen name="notification_mid_height">0dp</dimen>
 
     <!-- Height of a the summary ("more card") notification on keyguard. -->
-    <dimen name="notification_summary_height">44dp</dimen>
+    <dimen name="notification_summary_height">0dp</dimen>
 
     <!-- size at which Notification icons will be drawn in the status bar -->
-    <dimen name="status_bar_icon_drawing_size">17dip</dimen>
+    <dimen name="status_bar_icon_drawing_size">0dip</dimen>
 
     <!-- opacity at which Notification icons will be drawn in the status bar -->
     <item type="dimen" name="status_bar_icon_drawing_alpha">90%</item>
@@ -130,13 +130,13 @@
     <dimen name="close_handle_underlap">32dp</dimen>
 
     <!-- Height of the status bar header bar -->
-    <dimen name="status_bar_header_height">60dp</dimen>
+    <dimen name="status_bar_header_height">0dp</dimen>
 
     <!-- Height of the status bar header bar when expanded -->
-    <dimen name="status_bar_header_height_expanded">116dp</dimen>
+    <dimen name="status_bar_header_height_expanded">0dp</dimen>
 
     <!-- Height of the status bar header bar when on Keyguard -->
-    <dimen name="status_bar_header_height_keyguard">40dp</dimen>
+    <dimen name="status_bar_header_height_keyguard">0dp</dimen>
 
     <!-- Width for the notification panel and related windows -->
     <dimen name="match_parent">-1px</dimen>
@@ -421,7 +421,7 @@
 
     <!-- Largest size an avatar might need to be drawn in the user picker, status bar, or
          quick settings header -->
-    <dimen name="max_avatar_size">48dp</dimen>
+    <dimen name="max_avatar_size">0dp</dimen>
 
     <!-- Margin on the left side of the carrier text on Keyguard -->
     <dimen name="keyguard_carrier_text_margin">16dp</dimen>
