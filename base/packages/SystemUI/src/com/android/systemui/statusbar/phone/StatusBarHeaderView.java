@@ -67,10 +67,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private TextView mDateExpanded;
     private LinearLayout mSystemIcons;
     private View mSignalCluster;
-    private View mQsDetailHeader;
-    private TextView mQsDetailHeaderTitle;
-    private Switch mQsDetailHeaderSwitch;
-    private ImageView mQsDetailHeaderProgress;
     private TextView mEmergencyCallsOnly;
     private TextView mAlarmStatus;
 
@@ -127,11 +123,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mAmPm = (TextView) findViewById(R.id.am_pm_view);
         mDateCollapsed = (TextView) findViewById(R.id.date_collapsed);
         mDateExpanded = (TextView) findViewById(R.id.date_expanded);
-        mQsDetailHeader = findViewById(R.id.qs_detail_header);
-        mQsDetailHeader.setAlpha(0);
-        mQsDetailHeaderTitle = (TextView) mQsDetailHeader.findViewById(android.R.id.title);
-        mQsDetailHeaderSwitch = (Switch) mQsDetailHeader.findViewById(android.R.id.toggle);
-        mQsDetailHeaderProgress = (ImageView) findViewById(R.id.qs_detail_header_progress);
         mEmergencyCallsOnly = (TextView) findViewById(R.id.header_emergency_calls_only);
         mAlarmStatus = (TextView) findViewById(R.id.alarm_status);
         mAlarmStatus.setOnClickListener(this);
@@ -292,7 +283,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         mDateCollapsed.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
         mDateExpanded.setVisibility(mExpanded && mAlarmShowing ? View.INVISIBLE : View.VISIBLE);
         mAlarmStatus.setVisibility(mExpanded && mAlarmShowing ? View.VISIBLE : View.INVISIBLE);
-        mQsDetailHeader.setVisibility(mExpanded && mShowingDetail? View.VISIBLE : View.INVISIBLE);
         if (mSignalCluster != null) {
             updateSignalClusterDetachment();
         }
@@ -633,20 +623,11 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         }
 
         private void handleToggleStateChanged(boolean state) {
-            mQsDetailHeaderSwitch.setChecked(state);
         }
 
         private void handleScanStateChanged(boolean state) {
             if (mScanState == state) return;
             mScanState = state;
-            final Animatable anim = (Animatable) mQsDetailHeaderProgress.getDrawable();
-            if (state) {
-                mQsDetailHeaderProgress.animate().alpha(1f);
-                anim.start();
-            } else {
-                mQsDetailHeaderProgress.animate().alpha(0f);
-                anim.stop();
-            }
         }
 
         private void handleShowingDetail(final QSTile.DetailAdapter detail) {
@@ -656,27 +637,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             if (mAlarmShowing) {
                 transition(mAlarmStatus, !showingDetail);
             }
-            transition(mQsDetailHeader, showingDetail);
             mShowingDetail = showingDetail;
             if (showingDetail) {
-                mQsDetailHeaderTitle.setText(detail.getTitle());
                 final Boolean toggleState = detail.getToggleState();
-                if (toggleState == null) {
-                    mQsDetailHeaderSwitch.setVisibility(INVISIBLE);
-                    mQsDetailHeader.setClickable(false);
-                } else {
-                    mQsDetailHeaderSwitch.setVisibility(VISIBLE);
-                    mQsDetailHeaderSwitch.setChecked(toggleState);
-                    mQsDetailHeader.setClickable(true);
-                    mQsDetailHeader.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            detail.setToggleState(!mQsDetailHeaderSwitch.isChecked());
-                        }
-                    });
-                }
-            } else {
-                mQsDetailHeader.setClickable(false);
             }
         }
 
