@@ -74,9 +74,13 @@ public class QSFooter implements OnClickListener, DialogInterface.OnClickListene
 
     public void setListening(boolean listening) {
         if (listening) {
-            mSecurityController.addCallback(mCallback);
+            if (mSecurityController != null) {
+                mSecurityController.addCallback(mCallback);
+            }
         } else {
-            mSecurityController.removeCallback(mCallback);
+            if (mSecurityController != null) {
+                mSecurityController.removeCallback(mCallback);
+            }
         }
     }
 
@@ -94,7 +98,9 @@ public class QSFooter implements OnClickListener, DialogInterface.OnClickListene
 
     @Override
     public void onClick(View v) {
-        mHandler.sendEmptyMessage(H.CLICK);
+        if (mHandler != null) {
+           mHandler.sendEmptyMessage(H.CLICK);
+        }
     }
 
     private void handleClick() {
@@ -104,7 +110,9 @@ public class QSFooter implements OnClickListener, DialogInterface.OnClickListene
     }
 
     public void refreshState() {
-        mHandler.sendEmptyMessage(H.REFRESH_STATE);
+        if (mHandler != null) {
+           mHandler.sendEmptyMessage(H.REFRESH_STATE);
+        }
     }
 
     private void handleRefreshState() {

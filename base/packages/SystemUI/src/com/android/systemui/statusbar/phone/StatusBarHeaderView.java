@@ -98,7 +98,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     private ActivityStarter mActivityStarter;
     private BatteryController mBatteryController;
     private NextAlarmController mNextAlarmController;
-    private QSPanel mQSPanel;
 
 
     private final Rect mClipBounds = new Rect();
@@ -274,9 +273,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
         updateSystemIconsLayoutParams();
         updateClickTargets();
         updateMultiUserSwitch();
-        if (mQSPanel != null) {
-            mQSPanel.setExpanded(mExpanded);
-        }
         updateClockScale();
         updateAvatarScale();
         updateClockLp();
@@ -449,10 +445,6 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
     }
 
     public void setQSPanel(QSPanel qsp) {
-        mQSPanel = qsp;
-        if (mQSPanel != null) {
-            mQSPanel.setCallback(mQsPanelCallback);
-        }
     }
 
     @Override

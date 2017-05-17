@@ -178,7 +178,9 @@ public class BrightnessController implements ToggleSlider.Listener {
         updateMode();
         updateSlider();
 
-        mControl.setOnChangedListener(this);
+        if (mControl != null) {
+           mControl.setOnChangedListener(this);
+        }
         mListening = true;
     }
 
@@ -190,7 +192,9 @@ public class BrightnessController implements ToggleSlider.Listener {
 
         mBrightnessObserver.stopObserving();
         mUserTracker.stopTracking();
-        mControl.setOnChangedListener(null);
+        if (mControl != null) {
+           mControl.setOnChangedListener(null);
+        }
         mListening = false;
     }
 
@@ -269,7 +273,9 @@ public class BrightnessController implements ToggleSlider.Listener {
             mAutomatic = automatic != Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL;
             updateIcon(mAutomatic);
         } else {
-            mControl.setChecked(false);
+            if (mControl != null) {
+               mControl.setChecked(false);
+            }
             updateIcon(false /*automatic*/);
         }
     }
@@ -280,15 +286,19 @@ public class BrightnessController implements ToggleSlider.Listener {
             float value = Settings.System.getFloatForUser(mContext.getContentResolver(),
                     Settings.System.SCREEN_AUTO_BRIGHTNESS_ADJ, 0,
                     UserHandle.USER_CURRENT);
-            mControl.setMax((int) BRIGHTNESS_ADJ_RESOLUTION);
-            mControl.setValue((int) ((value + 1) * BRIGHTNESS_ADJ_RESOLUTION / 2f));
+            if (mControl != null) {
+               mControl.setMax((int) BRIGHTNESS_ADJ_RESOLUTION);
+               mControl.setValue((int) ((value + 1) * BRIGHTNESS_ADJ_RESOLUTION / 2f));
+            }
         } else {
             int value;
             value = Settings.System.getIntForUser(mContext.getContentResolver(),
                     Settings.System.SCREEN_BRIGHTNESS, mMaximumBacklight,
                     UserHandle.USER_CURRENT);
-            mControl.setMax(mMaximumBacklight - mMinimumBacklight);
-            mControl.setValue(value - mMinimumBacklight);
+            if (mControl != null) {
+               mControl.setMax(mMaximumBacklight - mMinimumBacklight);
+               mControl.setValue(value - mMinimumBacklight);
+            }
         }
     }
 

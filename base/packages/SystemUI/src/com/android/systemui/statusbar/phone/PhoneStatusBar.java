@@ -295,7 +295,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     // settings
     View mFlipSettingsView;
-    private QSPanel mQSPanel;
 
     // top bar
     StatusBarHeaderView mHeader;
@@ -857,28 +856,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 (ViewStub) mStatusBarWindow.findViewById(R.id.keyguard_user_switcher),
                 mKeyguardStatusBar, mNotificationPanel, mUserSwitcherController);
 
-
-        // Set up the quick settings tile panel
-        mQSPanel = (QSPanel) mStatusBarWindow.findViewById(R.id.quick_settings_panel);
-        if (mQSPanel != null) {
-            final QSTileHost qsh = new QSTileHost(mContext, this,
-                    mBluetoothController, mLocationController, mRotationLockController,
-                    mNetworkController, mZenModeController, mHotspotController,
-                    mCastController, mFlashlightController,
-                    mUserSwitcherController, mKeyguardMonitor,
-                    mSecurityController);
-            mQSPanel.setHost(qsh);
-            mQSPanel.setTiles(qsh.getTiles());
-            mBrightnessMirrorController = new BrightnessMirrorController(mStatusBarWindow);
-            mQSPanel.setBrightnessMirror(mBrightnessMirrorController);
-            mHeader.setQSPanel(mQSPanel);
-            qsh.setCallback(new QSTileHost.Callback() {
-                @Override
-                public void onTilesChanged() {
-                    mQSPanel.setTiles(qsh.getTiles());
-                }
-            });
-        }
 
         // User info. Trigger first load.
         mHeader.setUserInfoController(mUserInfoController);
@@ -3186,11 +3163,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
      * meantime, just update the things that we know change.
      */
     void updateResources() {
-        // Update the quick setting tiles
-        if (mQSPanel != null) {
-            mQSPanel.updateResources();
-        }
-
         loadDimens();
         mLinearOutSlowIn = AnimationUtils.loadInterpolator(
                 mContext, android.R.interpolator.linear_out_slow_in);

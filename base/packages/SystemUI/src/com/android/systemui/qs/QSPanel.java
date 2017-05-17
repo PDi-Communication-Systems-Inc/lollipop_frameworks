@@ -117,10 +117,6 @@ public class QSPanel extends ViewGroup {
 
     public void setBrightnessMirror(BrightnessMirrorController c) {
         super.onFinishInflate();
-        ToggleSlider brightnessSlider = (ToggleSlider) findViewById(R.id.brightness_slider);
-        ToggleSlider mirror = (ToggleSlider) c.getMirror().findViewById(R.id.brightness_slider);
-        brightnessSlider.setMirror(mirror);
-        brightnessSlider.setMirrorController(c);
     }
 
     public void setCallback(Callback callback) {
