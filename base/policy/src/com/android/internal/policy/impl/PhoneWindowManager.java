@@ -3894,8 +3894,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     + " forcefkg=" + mForceStatusBarFromKeyguard
                     + " top=" + mTopFullscreenOpaqueWindowState);
             if (mForceStatusBar || mForceStatusBarFromKeyguard) {
-                if (DEBUG_LAYOUT) Slog.v(TAG, "Showing status bar: forced");
-                if (mStatusBarController.setBarShowingLw(true)) {
+                if (DEBUG_LAYOUT) Slog.v(TAG, "Not (PDi) Showing status bar: forced");
+                if (mStatusBarController.setBarShowingLw(false)) {
                     changes |= FINISH_LAYOUT_REDO_LAYOUT;
                 }
                 // Maintain fullscreen layout until incoming animation is complete.
@@ -3931,8 +3931,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         if (DEBUG_LAYOUT) Slog.v(TAG, "Status bar already hiding");
                     }
                 } else {
-                    if (DEBUG_LAYOUT) Slog.v(TAG, "** SHOWING status bar: top is not fullscreen");
-                    if (mStatusBarController.setBarShowingLw(true)) {
+                    if (DEBUG_LAYOUT) Slog.v(TAG, "** NOT (PDi) SHOWING status bar: top is not fullscreen");
+                    if (mStatusBarController.setBarShowingLw(false)) {
                         changes |= FINISH_LAYOUT_REDO_LAYOUT;
                     }
                 }
