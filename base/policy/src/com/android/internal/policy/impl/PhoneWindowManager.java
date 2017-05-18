@@ -3920,7 +3920,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 // has the FLAG_FULLSCREEN set.  Not sure if there is another way that to be the
                 // case though.
                 if (mStatusBarController.isTransientShowing()) {
-                    if (mStatusBarController.setBarShowingLw(true)) {
+                    if (mStatusBarController.setBarShowingLw(false)) {
                         changes |= FINISH_LAYOUT_REDO_LAYOUT;
                     }
                 } else if (topIsFullscreen) {
