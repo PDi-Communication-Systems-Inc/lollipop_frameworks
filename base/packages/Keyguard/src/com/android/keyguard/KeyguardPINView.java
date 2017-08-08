@@ -103,7 +103,21 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
             ok.setOnHoverListener(new LiftToActivateListener(getContext()));
         }
 
-                View newUser = findViewById(R.id.im_a_new_user);
+        final View login_ok = findViewById(R.id.login_user);
+        if (login_ok != null) {
+            login_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doHapticKeyClick();
+                    if (mPasswordEntry.isEnabled()) {
+                        verifyPasswordAndUnlock();
+                    }
+                }
+            });
+            login_ok.setOnHoverListener(new LiftToActivateListener(getContext()));
+        }
+
+        View newUser = findViewById(R.id.im_a_new_user);
         if (newUser != null) {
             newUser.setOnClickListener(new View.OnClickListener() {
                 @Override

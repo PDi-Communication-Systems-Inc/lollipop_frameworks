@@ -166,6 +166,20 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView
             mOkButton.setOnHoverListener(new LiftToActivateListener(getContext()));
         }
 
+        final View login_ok = findViewById(R.id.login_user);
+        if (login_ok != null) {
+            login_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doHapticKeyClick();
+                    if (mPasswordEntry.isEnabled()) {
+                        verifyPasswordAndUnlock();
+                    }
+                }
+            });
+            login_ok.setOnHoverListener(new LiftToActivateListener(getContext()));
+        }
+
         mDeleteButton = findViewById(R.id.delete_button);
         mDeleteButton.setVisibility(View.VISIBLE);
         mDeleteButton.setOnClickListener(new OnClickListener() {
