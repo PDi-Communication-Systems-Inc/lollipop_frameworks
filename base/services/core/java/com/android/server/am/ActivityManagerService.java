@@ -1798,7 +1798,8 @@ public final class ActivityManagerService extends ActivityManagerNative
                 break;
             }
             case START_USER_SWITCH_MSG: {
-                showUserSwitchDialog(msg.arg1, (String) msg.obj);
+              showUserSwitchDialog(msg.arg1, (String) msg.obj);
+               Log.d(TAG,"Switching to owner.."); //pdi change
                 break;
             }
             case REPORT_USER_SWITCH_MSG: {
@@ -18321,7 +18322,8 @@ public final class ActivityManagerService extends ActivityManagerNative
                 Slog.w(TAG, "Cannot switch to User #" + userId + ": not a full user");
                 return false;
             }
-            userName = userInfo.name;
+           // userName = userInfo.name;
+            userName="";
             mTargetUserId = userId;
         }
         mHandler.removeMessages(START_USER_SWITCH_MSG);
@@ -18331,6 +18333,7 @@ public final class ActivityManagerService extends ActivityManagerNative
 
     private void showUserSwitchDialog(int userId, String userName) {
         // The dialog will show and then initiate the user switch by calling startUserInForeground
+        userName= "";
         Dialog d = new UserSwitchingDialog(this, mContext, userId, userName,
                 true /* above system */);
         d.show();

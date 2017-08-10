@@ -4545,9 +4545,9 @@
     <!-- Text spoken when the current user is switched if accessibility is enabled. [CHAR LIMIT=none] -->
     <string name="user_switched">Current user <xliff:g id="name" example="Bob">%1$s</xliff:g>.</string>
     <!-- Message shown when switching to a user [CHAR LIMIT=none] -->
-    <string name="user_switching_message">Switching to <xliff:g id="name" example="Bob">%1$s</xliff:g>\u2026</string>
+    <string name="user_switching_message">Please Wait<xliff:g id="name" example="Bob">%1$s</xliff:g>\u2026</string>
     <!-- Default name of the owner user [CHAR LIMIT=20] -->
-    <string name="owner_name" msgid="3879126011135546571">Owner</string>
+    <string name="owner_name" msgid="3879126011135546571">Owner </string>
     <!-- Error message title [CHAR LIMIT=35] -->
     <string name="error_message_title">Error</string>
     <!-- Message informing user that the change was disallowed by an administrator. [CHAR LIMIT=none] -->
