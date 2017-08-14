@@ -100,7 +100,8 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
             public void run() {
                 mPasswordEntry.requestFocus();
                 if (reason != KeyguardSecurityView.SCREEN_ON || mShowImeAtScreenOn) {
-                    mImm.showSoftInput(mPasswordEntry, InputMethodManager.SHOW_IMPLICIT);
+                // hide the keyboard and don't show it implicitly. Bug 644
+                // mImm.showSoftInput(mPasswordEntry, InputMethodManager.SHOW_IMPLICIT);
                 }
             }
         });
@@ -127,7 +128,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
         mImm = (InputMethodManager) getContext().getSystemService(
                 Context.INPUT_METHOD_SERVICE);
 
+
         mPasswordEntry = (TextView) findViewById(getPasswordTextViewId());
+        mImm.hideSoftInputFromWindow(mPasswordEntry.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         mPasswordEntry.setKeyListener(TextKeyListener.getInstance());
         mPasswordEntry.setInputType(InputType.TYPE_CLASS_TEXT
                 | InputType.TYPE_TEXT_VARIATION_PASSWORD);
