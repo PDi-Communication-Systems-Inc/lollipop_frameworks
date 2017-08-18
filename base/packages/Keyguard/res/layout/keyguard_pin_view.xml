@@ -208,11 +208,31 @@
                     />
         </LinearLayout>
 
+
            <LinearLayout
                    android:layout_width="match_parent"
                    android:layout_height="0dp"
                    android:layout_weight="1"
-                   android:layout_marginTop="40dp"
+                   android:layout_marginTop="9dp"
+                   android:orientation="horizontal" >
+
+           <Button
+                   android:id="@+id/login_user"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:layout_weight="1"
+                   android:text="@string/login_user"
+                   android:textSize="20sp"
+                   android:contentDescription="@string/keyboardview_keycode_enter"
+               />
+
+        </LinearLayout>
+
+           <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:layout_weight="1"
+                   android:layout_marginTop="15dp"
                    android:orientation="horizontal" >
 
            <Button
@@ -220,6 +240,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    android:layout_weight="1"
+                   android:textSize="20sp"
                    android:text="@string/im_a_new_user"
                    android:contentDescription="@string/keyboardview_keycode_enter"
                />
