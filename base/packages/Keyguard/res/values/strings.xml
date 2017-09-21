@@ -383,4 +383,5 @@
     <string name="login_user">     Login     </string>
     <string name="pwdEntryHint">Enter Password Here (OR)</string>
     <string name="pinEntryHint">Enter PIN Here</string>
+    <string name="swipeUp">Swipe up to unlock</string>
 </resources>

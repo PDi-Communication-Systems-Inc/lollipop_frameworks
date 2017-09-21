@@ -60,5 +60,15 @@
             android:ellipsize="marquee"
             android:singleLine="true" />
 
+    <TextView
+        android:id="@+id/swipeUp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/clock_white"
+        android:singleLine="true"
+        style="@style/widget_m_thin"
+        android:text="@string/swipeUp" />
+
     </LinearLayout>
 </com.android.keyguard.KeyguardStatusView>
