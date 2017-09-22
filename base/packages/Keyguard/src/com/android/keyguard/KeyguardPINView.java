@@ -28,6 +28,7 @@ import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import java.util.List;
 import android.content.Intent;
+import android.content.Context;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -36,6 +37,10 @@ import android.content.ComponentName;
 import android.widget.TextView.*;
 //import com.pdiarm.newuserconfirmation;
 import android.widget.Toast;
+import java.util.List;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.*;
 
 /**
  * Displays a PIN pad for unlocking.
@@ -51,10 +56,12 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
     private View mDivider;
     private int mDisappearYTranslation;
     Context context;
+    Context mContext;
     private static final String TAG="LockPatternKeyguardView"; 
 
     public KeyguardPINView(Context context) {
         this(context, null);
+        mContext = context;
     }
 
     public KeyguardPINView(Context context, AttributeSet attrs) {
@@ -62,6 +69,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
         mAppearAnimationUtils = new AppearAnimationUtils(context);
         mDisappearYTranslation = getResources().getDimensionPixelSize(
                 R.dimen.disappear_y_translation);
+        mContext = context;
     }
 
     protected void resetState() {
@@ -76,6 +84,38 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
     @Override
     protected int getPasswordTextViewId() {
         return R.id.pinEntry;
+    }
+
+    private void setDisplayTimeout() {
+	     String displayTimeout = "displayTimeout.txt";
+             File dirLauncher = new File("/mnt/sdcard/Android/obb/displaySetting");
+             BufferedReader reader = null;
+             String displayTimeoutStr = "";
+             StringBuilder sb = new StringBuilder();
+             try {
+                   File file  = new File(dirLauncher, displayTimeout);
+                   reader = new BufferedReader(new FileReader(file));
+
+                   displayTimeoutStr = reader.readLine();
+                   if(displayTimeoutStr == null ) {
+                      displayTimeoutStr = "600000";
+                   }
+                   long time = Long.parseLong(displayTimeoutStr);
+                   Log.i(TAG, "Display time value - "+time);
+                   android.provider.Settings.System.putLong(mContext.getContentResolver(), android.provider.Settings.System.SCREEN_OFF_TIMEOUT, time);
+                   reader.close();
+             } catch (IOException e) {
+                  e.printStackTrace();
+                    Log.e(TAG,"Error in reading obb file ");
+              } finally {
+                    try {
+                       if ( reader != null ) {
+                            reader.close();
+                        }
+                     }  catch (IOException e) {
+                           Log.e(TAG,"Error in closing the BufferedReader");
+                      }
+               }
     }
 
     @Override
@@ -96,6 +136,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
                 public void onClick(View v) {
                     doHapticKeyClick();
                     if (mPasswordEntry.isEnabled()) {
+                        setDisplayTimeout();
                         verifyPasswordAndUnlock();
                     }
                 }
@@ -110,6 +151,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView{
                 public void onClick(View v) {
                     doHapticKeyClick();
                     if (mPasswordEntry.isEnabled()) {
+                        setDisplayTimeout();
                         verifyPasswordAndUnlock();
                     }
                 }

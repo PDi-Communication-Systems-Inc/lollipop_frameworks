@@ -46,6 +46,7 @@ public class KeyguardStatusView extends GridLayout {
     private TextView mAlarmStatusView;
     private TextClock mDateView;
     private TextClock mClockView;
+    private TextView mSwipeUp;
     private TextView mOwnerInfo;
 
     private KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() {
@@ -105,11 +106,14 @@ public class KeyguardStatusView extends GridLayout {
         mAlarmStatusView = (TextView) findViewById(R.id.alarm_status);
         mDateView = (TextClock) findViewById(R.id.date_view);
         mClockView = (TextClock) findViewById(R.id.clock_view);
+        mSwipeUp = (TextView) findViewById(R.id.swipeUp);
         mOwnerInfo = (TextView) findViewById(R.id.owner_info);
         mLockPatternUtils = new LockPatternUtils(getContext());
         final boolean screenOn = KeyguardUpdateMonitor.getInstance(mContext).isScreenOn();
         setEnableMarquee(screenOn);
         refresh();
+        mSwipeUp.setVisibility(View.VISIBLE);
+        mSwipeUp.setText("Swipe up to unlock");
         updateOwnerInfo();
 
         // Disable elegant text height because our fancy colon makes the ymin value huge for no
@@ -120,6 +124,8 @@ public class KeyguardStatusView extends GridLayout {
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        mSwipeUp.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_m_font_size));
         mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
         mDateView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
@@ -134,6 +140,13 @@ public class KeyguardStatusView extends GridLayout {
 
         mClockView.setFormat12Hour(Patterns.clockView12);
         mClockView.setFormat24Hour(Patterns.clockView24);
+
+        mSwipeUp.setVisibility(View.VISIBLE);
+        mSwipeUp.setText("Swipe up to unlock");
+
+        updateOwnerInfo();
+
+
     }
 
     private void refresh() {

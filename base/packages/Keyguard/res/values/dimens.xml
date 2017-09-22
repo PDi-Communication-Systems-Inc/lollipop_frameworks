@@ -162,6 +162,7 @@
     <dimen name="label_font_size">14dp</dimen>
     <dimen name="widget_label_font_size">16sp</dimen>
     <dimen name="widget_big_font_size">88dp</dimen>
+    <dimen name="widget_m_font_size">40dp</dimen>
     <dimen name="big_font_size">120dp</dimen>
 
     <!-- The y translation to apply at the start in appear animations. -->

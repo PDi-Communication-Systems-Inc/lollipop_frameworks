@@ -22,6 +22,12 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
+import android.util.Log;
+import java.util.List;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.*;
+
 /**
  * A Pin based Keyguard input view
  */
@@ -137,6 +143,38 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView
         return mPasswordEntry.getText();
     }
 
+    private void setDisplayTimeout() {
+             String displayTimeout = "displayTimeout.txt";
+             File dirLauncher = new File("/mnt/sdcard/Android/obb/displaySetting");
+             BufferedReader reader = null;
+             String displayTimeoutStr = "";
+             StringBuilder sb = new StringBuilder();
+             try {
+                   File file  = new File(dirLauncher, displayTimeout);
+                   reader = new BufferedReader(new FileReader(file));
+
+                   displayTimeoutStr = reader.readLine();
+                   if(displayTimeoutStr == null ) {
+                      displayTimeoutStr = "600000";
+                   }
+                   long time = Long.parseLong(displayTimeoutStr);
+                   Log.i("KeyguardPinBasedInputView", "time value - "+time);
+                   android.provider.Settings.System.putLong(mContext.getContentResolver(), android.provider.Settings.System.SCREEN_OFF_TIMEOUT, time);
+                   reader.close();
+             } catch (IOException e) {
+                  e.printStackTrace();
+                    Log.e("KeyguardPinBasedInputView","Error in reading obb file ");
+              } finally {
+                    try {
+                       if ( reader != null ) {
+                            reader.close();
+                        }
+                     }  catch (IOException e) {
+                           Log.e("KeyguardPinBasedInputView","Error in closing the BufferedReader");
+                      }
+               }
+    }
+
     @Override
     protected void onFinishInflate() {
         mPasswordEntry = (PasswordTextView) findViewById(getPasswordTextViewId());
@@ -159,6 +197,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView
                 public void onClick(View v) {
                     doHapticKeyClick();
                     if (mPasswordEntry.isEnabled()) {
+                        setDisplayTimeout();
                         verifyPasswordAndUnlock();
                     }
                 }
@@ -173,6 +212,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView
                 public void onClick(View v) {
                     doHapticKeyClick();
                     if (mPasswordEntry.isEnabled()) {
+                        setDisplayTimeout();
                         verifyPasswordAndUnlock();
                     }
                 }
