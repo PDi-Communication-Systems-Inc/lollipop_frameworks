@@ -25,7 +25,10 @@
     android:id="@+id/status_bar"
     android:background="@drawable/system_bar_background"
     android:orientation="vertical"
-    android:focusable="true"
+    android:focusable="false"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:visibility="gone"
     android:descendantFocusability="afterDescendants"
     >
 
@@ -35,9 +38,9 @@
         android:layout_height="match_parent"
         android:paddingStart="6dip"
         android:paddingBottom="2dip"
+        android:visibility="gone"
         android:src="@drawable/ic_sysbar_lights_out_dot_small"
         android:scaleType="center"
-        android:visibility="gone"
         />
 
     <LinearLayout android:id="@+id/status_bar_contents"
