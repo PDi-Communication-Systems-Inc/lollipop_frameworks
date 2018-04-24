@@ -1057,7 +1057,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     @Override
                     public void onSwipeFromTop() {
                         if (mStatusBar != null) {
-                            requestTransientBars(mStatusBar);
+                           // requestTransientBars(mStatusBar);
                         }
                     }
                     @Override

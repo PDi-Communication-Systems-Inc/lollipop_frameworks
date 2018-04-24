@@ -1065,9 +1065,9 @@ public class UserManager {
         if (android.os.Build.ID.startsWith("JVP")) return 1;
         String maxUsersCount = SystemProperties.get("persist.sys.max_users");
         if(maxUsersCount == null || maxUsersCount == "" || maxUsersCount.isEmpty()) {
-           return 3; //default 2 patient profile and one owner
+           return 2; //default 1 patient profile and one owner
         }
-           return 3; //default 2  patient profile and one owner
+           return 2; //default 1  patient profile and one owner
         //return Integer.parseInt(maxUsersCount);
     }
 
