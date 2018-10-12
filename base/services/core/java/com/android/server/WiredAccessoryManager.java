@@ -68,6 +68,10 @@ final class WiredAccessoryManager implements WiredAccessoryCallbacks {
                                                    BIT_USB_HEADSET_ANLG|BIT_USB_HEADSET_DGTL|
                                                    BIT_HDMI_AUDIO|BIT_LINEOUT);
 
+    public static native char nativeReturnAIOSetting();
+    public static native char nativeReturnSpkDet();
+    public static native char nativeReturnIntSpkSetting();
+
     private static final String NAME_H2W = "h2w";
     private static final String NAME_USB_AUDIO = "usb_audio";
     private static final String NAME_HDMI_AUDIO = "hdmi_audio";
@@ -281,7 +285,14 @@ final class WiredAccessoryManager implements WiredAccessoryCallbacks {
             } else if (headset == BIT_USB_HEADSET_DGTL) {
                 outDevice = AudioManager.DEVICE_OUT_DGTL_DOCK_HEADSET;
             } else if (headset == BIT_HDMI_AUDIO) {
-                outDevice = AudioManager.DEVICE_OUT_HDMI;
+                       if  ((nativeReturnSpkDet()=='1')    ||
+                           ((nativeReturnAIOSetting()=='1') && (nativeReturnIntSpkSetting()=='0')))
+                      {
+                            outDevice = AudioManager.DEVICE_OUT_AUX_DIGITAL;
+                      }
+                      else {
+                            outDevice = AudioManager.DEVICE_OUT_ANLG_DOCK_HEADSET;
+                      }
             } else {
                 Slog.e(TAG, "setDeviceState() invalid headset type: "+headset);
                 return;

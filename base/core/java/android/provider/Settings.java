@@ -2516,6 +2516,12 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_DISABLED = "lockscreen.disabled";
 
+       /**
+        *  Internal speakers enable.
+        * @hide
+        */
+        public static final String INTERNALSPEAKERS_ENABLED = "internalSpeakers";
+
         /**
          * @deprecated Use {@link android.provider.Settings.Global#LOW_BATTERY_SOUND}
          * instead
@@ -2706,7 +2712,8 @@ public final class Settings {
             POINTER_SPEED,
             VIBRATE_WHEN_RINGING,
             RINGTONE,
-            NOTIFICATION_SOUND
+            NOTIFICATION_SOUND,
+            INTERNALSPEAKERS_ENABLED
         };
 
         /**
