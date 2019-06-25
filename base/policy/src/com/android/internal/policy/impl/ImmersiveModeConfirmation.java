@@ -237,7 +237,7 @@ public class ImmersiveModeConfirmation {
             float density = metrics.density;
 
             // create the confirmation cling
-           /* mClingLayout = (ViewGroup)
+            mClingLayout = (ViewGroup)
                     View.inflate(getContext(), R.layout.immersive_mode_cling, null);
 
             final Button ok = (Button) mClingLayout.findViewById(R.id.ok);
@@ -281,10 +281,10 @@ public class ImmersiveModeConfirmation {
                 mColorAnim.start();
             } else {
                 mColor.setColor(BGCOLOR);
-            } */
+            }
 
             mContext.registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
-        } 
+        }
 
         @Override
         public void onDetachedFromWindow() {
