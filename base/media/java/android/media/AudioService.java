@@ -550,7 +550,7 @@ public class AudioService extends IAudioService.Stub {
             "ro.config.media_vol_steps",
            MAX_STREAM_VOLUME[AudioSystem.STREAM_MUSIC]);
 
-        if (SystemProperties.get("ro.product.device").contains("hdmidongle"))
+        if (SystemProperties.get("ro.product.device").contains("ar6mx"))
 		mFixedVolumeDevices &= ~AudioSystem.DEVICE_OUT_AUX_DIGITAL;
 
         sSoundEffectVolumeDb = context.getResources().getInteger(
